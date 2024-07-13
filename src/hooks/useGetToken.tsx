@@ -23,9 +23,11 @@ export const useGetToken = () => {
     tokenEndpoint: "https://accounts.spotify.com/api/token",
   };
 
+  console.log(process.env.EXPO_PUBLIC_API_CLIENT_ID);
+
   const config = {
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
+    clientId: process.env.EXPO_PUBLIC_API_CLIENT_ID,
+    clientSecret: process.env.EXPO_PULIBC_API_CLIENT_SECRET,
     scopes: [
       "user-read-email",
       "user-library-read",
@@ -60,9 +62,9 @@ export const useGetToken = () => {
         grant_type: "authorization_code",
         code,
         redirect_uri: "exp://10.0.2.2:8081/--/spotify-auth-callback",
-        client_id: process.env.CLIENT_ID,
+        client_id: process.env.EXPO_PUBLIC_API_CLIENT_ID,
         code_verifier: codeVerifer,
-        client_secret: process.env.CLIENT_SECRET,
+        client_secret: process.env.EXPO_PULIBC_API_CLIENT_SECRET,
       };
 
       const result = await apiInstance(
@@ -91,7 +93,6 @@ export const useGetToken = () => {
             },
           },
         });
-        router.replace("/components");
       }
     } catch (error) {
       console.log({ error });

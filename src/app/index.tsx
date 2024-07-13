@@ -56,7 +56,7 @@ export default function Auth() {
           <Button
             width="90%"
             marginTop={["8", "12", "10"]}
-            onPress={() => accessToken}
+            onPress={() => accessToken()}
             bg="blue.500"
             borderRadius="xl"
           >

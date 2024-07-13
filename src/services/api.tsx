@@ -22,8 +22,8 @@ const getRefreshToken = async () => {
       data: new URLSearchParams({
         grant_type: "refresh_token",
         refresh_token: refreshToken,
-        client_id: process.env.CLIENT_ID,
-        client_secret: process.env.CLIENT_SECRET,
+        client_id: process.env.EXPO_PUBLIC_API_CLIENT_ID,
+        client_secret: process.env.EXPO_PULIBC_API_CLIENT_SECRET,
       }).toString(),
     });
 
