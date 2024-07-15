@@ -1,6 +1,12 @@
 import React from "react";
 import { View, Dimensions, TouchableOpacity } from "react-native";
-import { Box, Image, Text, VStack, Pressable } from "native-base";
+import {
+  Box,
+  Image,
+  Text,
+  VStack,
+  Pressable,
+} from "@gluestack-ui/themed-native-base";
 import { PropsCardPlaylist } from "../../types/Playlist/propsCardPlaylist";
 
 const { width, height } = Dimensions.get("screen");

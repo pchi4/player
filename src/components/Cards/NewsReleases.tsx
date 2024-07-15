@@ -1,6 +1,12 @@
 import React from "react";
 import { View } from "react-native";
-import { Box, Image, Text, VStack, Pressable } from "native-base";
+import {
+  Box,
+  Image,
+  Text,
+  VStack,
+  Pressable,
+} from "@gluestack-ui/themed-native-base";
 import { PropsCardNewsReleases } from "../../types/NewRealeases/propsNewRealeases";
 
 export const CardNewsReleases = ({

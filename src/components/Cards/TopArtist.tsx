@@ -1,4 +1,10 @@
-import { Box, Center, Text, Heading, Image } from "native-base";
+import {
+  Box,
+  Center,
+  Text,
+  Heading,
+  Image,
+} from "@gluestack-ui/themed-native-base";
 import React, { useState, useEffect } from "react";
 
 export const CardTopArtist = () => {

@@ -1,5 +1,12 @@
 import React from "react";
-import { HStack, Box, Divider, Center, Image, Text } from "native-base";
+import {
+  HStack,
+  Box,
+  Divider,
+  Center,
+  Image,
+  Text,
+} from "@gluestack-ui/themed-native-base";
 import { TouchableOpacity } from "react-native";
 import { CardType } from "../../types/Home/propsCardHome";
 
@@ -9,10 +16,13 @@ export const CardHome = ({ navigation, items }: CardType) => {
       <TouchableOpacity onPress={() => navigation.navigate("albums", items)}>
         <HStack paddingBottom="4" alignItems="center" alignContent="center">
           <Box
-            bg="primary.300"
             roundedBottomLeft="md"
             roundedTopLeft="md"
-            style={{ flex: 1 }}
+            style={{
+              borderTopLeftRadius: 8,
+              borderBottomLeftRadius: 8,
+              flex: 1,
+            }}
           >
             <Image
               source={{ uri: items.album.images[0].url }}
@@ -22,15 +32,23 @@ export const CardHome = ({ navigation, items }: CardType) => {
               size="sm"
               roundedTopLeft="md"
               roundedBottomLeft="md"
+              style={{
+                borderTopLeftRadius: 8,
+                borderBottomLeftRadius: 8,
+              }}
             />
           </Box>
           <Box
-            style={{ flex: 1.5 }}
             h="100%"
             bg="dark.300"
             padding="2"
             roundedBottomRight="md"
             roundedTopRight="md"
+            style={{
+              borderTopRightRadius: 8,
+              borderBottomRightRadius: 8,
+              flex: 1.5,
+            }}
           >
             <Center paddingTop="3" alignItems="start">
               <Text

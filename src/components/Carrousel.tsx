@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Dimensions } from "react-native";
 import { FlatList, Image, StyleSheet } from "react-native";
-import { Box, Text } from "native-base";
+import { Box, Text } from "@gluestack-ui/themed-native-base";
 const width = Dimensions.get("screen").width;
 
 export const CarouselAutoScroll = ({ data, interval }) => {

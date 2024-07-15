@@ -18,7 +18,8 @@
         "UIBackgroundModes": [
           "audio"
         ]
-      }
+      },
+      "bundleIdentifier": "com.pchia.player"
     },
     "android": {
       "adaptiveIcon": {

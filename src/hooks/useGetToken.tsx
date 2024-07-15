@@ -39,7 +39,7 @@ export const useGetToken = () => {
       "playlist-modify-public",
     ],
     usePKCE: false,
-    redirectUri: "exp://10.0.2.2:8081/--/spotify-auth-callback",
+    redirectUri: "exp://192.168.10.5:8081/--/spotify-auth-callback",
   };
 
   function generateCodeVerifier(length: number): string {
@@ -61,7 +61,7 @@ export const useGetToken = () => {
       const data = {
         grant_type: "authorization_code",
         code,
-        redirect_uri: "exp://10.0.2.2:8081/--/spotify-auth-callback",
+        redirect_uri: "exp://192.168.10.5:8081/--/spotify-auth-callback",
         client_id: process.env.EXPO_PUBLIC_API_CLIENT_ID,
         code_verifier: codeVerifer,
         client_secret: process.env.EXPO_PULIBC_API_CLIENT_SECRET,

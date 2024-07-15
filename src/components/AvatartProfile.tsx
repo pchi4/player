@@ -1,4 +1,4 @@
-import { Text, Avatar, HStack, Box } from "native-base";
+import { Text, Avatar, HStack, Box } from "@gluestack-ui/themed-native-base";
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 

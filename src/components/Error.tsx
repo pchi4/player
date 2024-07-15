@@ -6,7 +6,7 @@ import {
   VStack,
   Progress,
   Center,
-} from "native-base";
+} from "@gluestack-ui/themed-native-base";
 import { Dimensions, TouchableOpacity, Platform } from "react-native";
 
 export const Error = () => {

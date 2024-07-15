@@ -1,4 +1,11 @@
-import { Text, Box, HStack, Image, VStack, Progress } from "native-base";
+import {
+  Text,
+  Box,
+  HStack,
+  Image,
+  VStack,
+  Progress,
+} from "@gluestack-ui/themed-native-base";
 import { Dimensions, TouchableOpacity, Platform } from "react-native";
 import { useStateValue } from "../context/State";
 import { Feather } from "@expo/vector-icons";

@@ -13,11 +13,13 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { StatusBar } from "react-native";
 import React from "react";
 import TrackPlayer from "react-native-track-player";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { useSetupTrackPlayer, useLogTrackPlayerState } from "@/src/hooks";
 import { PlaybackService } from "@/src/services/PlaybackService";
 import { StateProvider } from "@/src/context/State";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,8 +42,10 @@ export default function RootLayout() {
     <StateProvider>
       <QueryClientProvider client={queryClient}>
         <NativeBaseProvider>
-          <Navigator />
-          <StatusBar barStyle="default" />
+          <GestureHandlerRootView>
+            <Navigator />
+            <StatusBar barStyle="default" />
+          </GestureHandlerRootView>
         </NativeBaseProvider>
       </QueryClientProvider>
     </StateProvider>
@@ -67,11 +71,13 @@ function Navigator() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <SafeAreaProvider>
+        <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
 
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-      </Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </SafeAreaProvider>
     </ThemeProvider>
   );
 }

@@ -8,7 +8,13 @@ import {
   TouchableOpacity,
   Linking,
 } from "react-native";
-import { HStack, Box, Text, FlatList } from "@gluestack-ui/themed-native-base";
+import {
+  HStack,
+  Box,
+  Text,
+  FlatList,
+  Pressable,
+} from "@gluestack-ui/themed-native-base";
 import { useStateValue } from "@/src/context/State";
 import * as Liking from "expo-linking";
 
@@ -33,7 +39,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import TrackPlayer from "react-native-track-player";
 // import { SetupService } from "@/src/services/SetupService";
 
-import { router } from "expo-router";
+import { router, Link } from "expo-router";
+import { ThemedText } from "@/src/components/ThemedText";
 
 export default function Home() {
   const [_, setNavigator] = useStateValue().navigator;
@@ -114,12 +121,10 @@ export default function Home() {
   }
 
   return (
-    <Box padding="4" bg="black">
+    <Box padding="4">
       <ScrollView>
-        <Box paddingTop="4">
-          <Text fontSize="2xl" fontWeight="bold" color="white">
-            Tocados recentes
-          </Text>
+        <Box paddingTop="10">
+          <ThemedText type="title">Tocados recentes</ThemedText>
         </Box>
         {/* 
           <Box>
@@ -138,14 +143,14 @@ export default function Home() {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           renderItem={({ item }) => (
-            <CardHome items={item} navigation={navigation} />
+            <CardHome items={item} navigation={router} />
           )}
         />
 
         <Box paddingTop="6">
-          <Text fontSize="2xl" fontWeight="bold" color="white">
+          <ThemedText type="title">
             Feito para {profile?.display_name}
-          </Text>
+          </ThemedText>
         </Box>
 
         <FlatList
@@ -158,13 +163,16 @@ export default function Home() {
           showsHorizontalScrollIndicator={false}
           horizontal
           renderItem={({ item }) => (
-            <CardAlbum
-              width={250}
-              height={250}
-              items={item}
-              navigation={navigation}
-              handleClick={() => navigation.navigate("albums", item)}
-            />
+            <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: "/album/[details]",
+                  params: { details: item },
+                })
+              }
+            >
+              <CardAlbum width={250} height={250} items={item} />
+            </Pressable>
           )}
         />
 
@@ -186,13 +194,13 @@ export default function Home() {
               Width={250}
               Height={250}
               items={item}
-              navigation={navigation}
-              handleClick={() =>
-                navigation.navigate("playlists", {
-                  item,
-                  limit: item.tracks.total,
-                })
-              }
+              navigation={router}
+              // handleClick={() =>
+              //   router.navigate("playlists", {
+              //     item,
+              //     limit: item.tracks.total,
+              //   })
+              // }
             />
           )}
         />
@@ -215,8 +223,8 @@ export default function Home() {
               width={250}
               height={250}
               items={item}
-              navigation={navigation}
-              handleClick={() => navigation.navigate("albums", item)}
+              navigation={router}
+              // handleClick={() => router.navigate("albums", item)}
             />
           )}
         />
