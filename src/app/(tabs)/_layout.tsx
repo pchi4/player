@@ -9,6 +9,9 @@ export default function TabLayout() {
     <Stack>
       <Stack.Screen name="components" options={{ headerShown: false }} />
       <Stack.Screen name="album/[details]" options={{ headerShown: false }} />
+      <Stack.Screen name="play/[details]" options={{ headerShown: false }} />
+      <Stack.Screen name="artist/[details]" options={{ headerShown: false }} />
+      <Stack.Screen name="library/index" options={{ headerShown: false }} />
     </Stack>
   );
 }
