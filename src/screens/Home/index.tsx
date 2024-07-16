@@ -44,6 +44,7 @@ import { ThemedText } from "@/src/components/ThemedText";
 
 export default function Home() {
   const [_, setNavigator] = useStateValue().navigator;
+  const [context, dispatch] = useStateValue().reducer;
 
   useEffect(() => {
     LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
@@ -164,12 +165,15 @@ export default function Home() {
           horizontal
           renderItem={({ item }) => (
             <Pressable
-              onPress={() =>
-                router.push({
-                  pathname: "/album/[details]",
-                  params: { details: item },
-                })
-              }
+              onPress={() => {
+                dispatch({
+                  type: "setAlbum",
+                  payload: {
+                    album: item,
+                  },
+                });
+                router.push("/album/[details]");
+              }}
             >
               <CardAlbum width={250} height={250} items={item} />
             </Pressable>

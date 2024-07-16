@@ -61,7 +61,7 @@ export default function Auth() {
               try {
                 await AsyncStorage.setItem(
                   "token",
-                  "BQCsP4Roux119okT9se5qBtiZrJNU4713qucgCqLFQsystzgVGTZfhE_b3Vv_Qc-zrcsZ_St5lWNgkJZQzuC-2kBZR20kdaLgyA6hoBtM-cj1paIE_F4TlyeVpr5QCpzwC4sETG9bkIQWJ4-IVUG8yJeYr4cXZUdLnYl4H_FYYqGcllFK_zGyv9ZHyw48b2DDmqbA52fEw"
+                  "BQAOd-XGPLqXl7KB_D5KHB99FlNznSy_ZCD5_r2zbtquJUM1ZfcUFt3-cxWwZU1qcOJN1w1_USt9TEvC69_2ysYKqalK5dCv4W-2XSO-M8HasDNC_fd4ElEs3g-X3xEAHmk0lTgejrF1xc_xYfV4LfV-0rnpQdpchHvivZqoljejIp7LxuF7JYX0avizHkwvYk8QWV6nTCXY8TtC1ck6GsyyL7ebcLcyxHQG_ysQmPxhf-8"
                 );
                 router.replace("/components");
               } catch (error) {}

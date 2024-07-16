@@ -11,13 +11,13 @@ import {
   AspectRatio,
   Stack,
   Flex,
-} from "native-base";
+} from "@gluestack-ui/themed-native-base";
 import {
   Pressable,
   Dimensions,
   TouchableOpacity,
   ScrollView,
-} from "@gluestack-ui/themed-native-base";
+} from "react-native";
 
 import { useStateValue } from "@/src/context/State";
 import { LinearGradient } from "expo-linear-gradient";
