@@ -41,12 +41,15 @@ import TrackPlayer, {
   usePlaybackState,
 } from "react-native-track-player";
 
+import Controller from "@/src/screens/Controller";
+
 import {
   router,
   useLocalSearchParams,
   useGlobalSearchParams,
 } from "expo-router";
 import { de } from "date-fns/locale";
+import { ThemedText } from "@/src/components/ThemedText";
 
 type PropsAlbums = {
   route: object;
@@ -55,50 +58,25 @@ type PropsAlbums = {
 
 const { width, height } = Dimensions.get("screen");
 
+interface Track {
+  _track_number: any;
+  duration_ms: any;
+  preview_url: any;
+  name: any;
+  artists: { name: any }[];
+  explicit: boolean;
+}
+
 export default function Album() {
-  const [currentTrack, setCurrentTrack] = useState({
-    name: null,
-    duration: null,
-    numberTrack: null,
-    uriTrack: null,
-    artWork: null,
-    nameArtist: null,
-  });
   const [context, dispatch] = useStateValue().reducer;
-  const details = useGlobalSearchParams<{ details: Array<string> }>();
-  const { details: ba } = useLocalSearchParams<{ details: Array<string> }>();
   const album = context.album.album;
 
   const idArtist = album.artists[0].id;
 
   const playerState = usePlaybackState();
-  // console.log({ playerState });
-  const isPlaying = playerState === State.Playing;
-
-  async function loadedMusic() {
-    if (isPlaying) return;
-    try {
-      const tracks = album.tracks.items.map((track, idx) => {
-        return {
-          url: track.preview_url,
-          title: track.name,
-          artist: track.artists[0].name,
-          artwork: album?.images[0].url,
-        };
-      });
-
-      // You can then [add](https://rntp.dev/docs/api/functions/queue#addtracks-insertbeforeindex) the items to the queue
-      await TrackPlayer.add(tracks);
-      await TrackPlayer.play();
-      const state = await TrackPlayer.getState();
-
-      console.log({ state });
-    } catch (error) {}
-  }
 
   useEffect(() => {
     LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
-    loadedMusic();
   }, []);
 
   const {
@@ -120,78 +98,33 @@ export default function Album() {
   };
 
   const handleDispatchs = async (index: number, item: object) => {
-    // dispatch({
-    //   type: "setAlbum",
-    //   payload: {
-    //     album: {
-    //       tracks: {
-    //         index
-    //         items: route.params.album.tracks.items.map((value) => {
-    //           return {
-    //             preview_url: value.preview_url,
-    //             duration_ms: value.duration_ms,
-    //             name: value.name,
-    //             images: route.params.album.images,
-    //             track_number: value.track_number,
-    //             album: {
-    //               name: route.params.album.name,
-    //               type: route.params.album.type,
-    //             },
-    //             artists: route.params.album.artists,
-    //           };
-    //         }),
-    //       },
-    //       track: item,
-    //     },
-    //   },
-    // });
-    if (isPlaying) {
-      const activeTracks = await TrackPlayer.getActiveTrackIndex();
-      await TrackPlayer.remove(activeTracks);
+    try {
+      await TrackPlayer.reset();
+
+      const tracks = album.tracks.items.map((track: Track, idx: any) => {
+        return {
+          url: track.preview_url,
+          title: track.name,
+          artist: track.artists[0].name,
+          duartion: track.duration_ms,
+          album: album.name,
+          total: album.tracks.total,
+          artwork: album?.images[0].url,
+          number_track: track._track_number,
+          explicit: track.explicit,
+        };
+      });
+
+      await TrackPlayer.add(tracks[index]);
+      await TrackPlayer.add(
+        tracks.filter((track: Track, idx: number) => idx != index)
+      );
+      const trackQueue = await TrackPlayer.getQueue();
+
+      await TrackPlayer.play();
+    } catch (error) {
+      console.log("error ao dar play:", error);
     }
-
-    await TrackPlayer.add({
-      url: item?.preview_url,
-      title: item?.name,
-      artist: item?.artists[0].name,
-      artwork: "https://i.ytimg.com/vi/JhUFfaArYk8/maxresdefault.jpg",
-      rating: 1,
-      playlist: ["Rap 🎤"],
-    });
-
-    setCurrentTrack({
-      name: item?.name,
-      numberTrack: item?.track_number,
-      uriTrack: item?.preview_url,
-      duration: item?.duration_ms,
-      artWork: null,
-      nameArtist: item?.artists[0].name,
-    });
-
-    const a = await TrackPlayer.getActiveTrack();
-    TrackPlayer.console.log(a);
-
-    await TrackPlayer.play();
-    // // dispatch({
-    // //   type: "setArtist",
-    // //   payload: {
-    // //     artists,i
-    // //   },
-    // // });
-
-    // dispatch({
-    //   type: "setCurrentSound",
-    //   payload: {
-    //     currentSound: {
-    //       name: item?.name,
-    //       numberTrack: item?.track_number,
-    //       uriTrack: item?.preview_url,
-    //       duration: item?.duration_ms,
-    //       artWork: null,
-    //       nameArtist: item?.artists[0].name,
-    //     },
-    //   },
-    // });
   };
 
   if (
@@ -205,10 +138,7 @@ export default function Album() {
 
   return (
     <View>
-      <LinearGradient
-        colors={["#a3a5a8", "#212224", "#212224"]}
-        style={{ paddingBottom: context?.currentSound ? 60 : 0 }}
-      >
+      <LinearGradient colors={["#a3a5a8", "#212224", "#212224"]}>
         <View style={{ paddingHorizontal: 8 }}>
           <ScrollView>
             <SafeAreaView>
@@ -249,15 +179,11 @@ export default function Album() {
               </Box>
 
               <View style={{ margin: 4 }}>
-                <Box paddingX="4">
-                  <Text
-                    fontSize={["xl", "2xl", "3xl"]}
-                    fontWeight="bold"
-                    paddingY="2"
-                    color="white"
-                  >
+                <Box>
+                  <ThemedText type="title" style={{ paddingVertical: 8 }}>
+                    {" "}
                     {album?.name}
-                  </Text>
+                  </ThemedText>
 
                   <HStack justifyContent="start" paddingY="4">
                     <Avatar
@@ -396,7 +322,7 @@ export default function Album() {
                   />
                 </Box>
 
-                <Box padding="4">
+                <Box style={{ paddingVertical: 8 }}>
                   <Text color="white" fontSize="md" fontWeight="bold">
                     {format(new Date(album.release_date), "do 'de' MMMM yyyy", {
                       locale: eoLocale,
@@ -407,7 +333,7 @@ export default function Album() {
                   </Text>
                 </Box>
 
-                <Box paddingX="4">
+                <Box style={{ paddingVertical: 4 }}>
                   <HStack justifyContent="start" paddingY="4">
                     <Avatar
                       bg="green.500"
@@ -427,7 +353,7 @@ export default function Album() {
                   </HStack>
                 </Box>
 
-                <Box padding="4">
+                <Box style={{ paddingVertical: 4 }}>
                   <Text fontSize="lg" fontWeight="bold" color="white">
                     Mais que talvez você goste
                   </Text>
@@ -489,6 +415,7 @@ export default function Album() {
               </View>
             </SafeAreaView>
           </ScrollView>
+          <Controller />
         </View>
       </LinearGradient>
     </View>

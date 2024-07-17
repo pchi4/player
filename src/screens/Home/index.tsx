@@ -36,11 +36,10 @@ import {
   useGetPlaytlist,
 } from "./hooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import TrackPlayer from "react-native-track-player";
-// import { SetupService } from "@/src/services/SetupService";
 
 import { router, Link } from "expo-router";
 import { ThemedText } from "@/src/components/ThemedText";
+import Controller from "@/src/screens/Controller";
 
 export default function Home() {
   const [_, setNavigator] = useStateValue().navigator;
@@ -69,28 +68,6 @@ export default function Home() {
     isLoading: playlistLoading,
     isFetching: playlistFetching,
   } = useGetPlaytlist();
-
-  // const setupPlayer = async () => {
-  //   try {
-  //     await TrackPlayer.setupPlayer();
-  //     var track1 = {
-  //       url: "http://example.com/avaritia.mp3", // Load media from the network
-  //       title: "Avaritia",
-  //       artist: "deadmau5",
-  //       album: "while(1<2)",
-  //       genre: "Progressive House, Electro House",
-  //       date: "2014-05-20T07:00:00+00:00", // RFC 3339
-  //       artwork: "http://example.com/cover.png", // Load artwork from the network
-  //       duration: 402, // Duration in seconds
-  //     };
-
-  //     // You can then [add](https://rntp.dev/docs/api/functions/queue#addtracks-insertbeforeindex) the items to the queue
-  //     await TrackPlayer.add([track1]);
-  //     await TrackPlayer.play();
-  //   } catch (error) {
-  //     console.log("error ao dar p play", error);
-  //   }
-  // };
 
   const setProfileStore = async () => {
     try {
@@ -127,12 +104,6 @@ export default function Home() {
         <Box paddingTop="10">
           <ThemedText type="title">Tocados recentes</ThemedText>
         </Box>
-        {/* 
-          <Box>
-            <TouchableOpacity onPress={setupPlayer}>
-              <Text>Play</Text>
-            </TouchableOpacity>
-          </Box> */}
 
         <FlatList
           style={{ paddingTop: StatusBar.currentHeight }}
@@ -164,26 +135,12 @@ export default function Home() {
           showsHorizontalScrollIndicator={false}
           horizontal
           renderItem={({ item }) => (
-            <Pressable
-              onPress={() => {
-                dispatch({
-                  type: "setAlbum",
-                  payload: {
-                    album: item,
-                  },
-                });
-                router.push("/album/[details]");
-              }}
-            >
-              <CardAlbum width={250} height={250} items={item} />
-            </Pressable>
+            <CardAlbum width={250} height={250} items={item} />
           )}
         />
 
         <Box paddingTop="6">
-          <Text fontSize="2xl" fontWeight="bold" color="white">
-            Suas playlists
-          </Text>
+          <ThemedText type="title">Suas playlists</ThemedText>
         </Box>
 
         <FlatList
@@ -210,15 +167,13 @@ export default function Home() {
         />
 
         <Box paddingTop="6">
-          <Text fontSize="2xl" fontWeight="bold" color="white">
-            Novidades na área
-          </Text>
+          <ThemedText type="title">Novidades na área</ThemedText>
         </Box>
 
         <FlatList
           style={{ paddingTop: StatusBar.currentHeight }}
           data={newsRealeases?.albums?.items}
-          keyExtractor={(item, idx) => String(idx)}
+          keyExtractor={(_item, idx) => String(idx)}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           horizontal
@@ -233,6 +188,7 @@ export default function Home() {
           )}
         />
       </ScrollView>
+      <Controller />
     </Box>
   );
 }

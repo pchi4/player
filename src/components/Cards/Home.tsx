@@ -9,11 +9,25 @@ import {
 } from "@gluestack-ui/themed-native-base";
 import { TouchableOpacity } from "react-native";
 import { CardType } from "../../types/Home/propsCardHome";
+import { useStateValue } from "@/src/context/State";
+import { router } from "expo-router";
 
 export const CardHome = ({ navigation, items }: CardType) => {
+  const [context, dispatch] = useStateValue().reducer;
+
   return (
     <Box style={{ flex: 1 }} marginRight="2">
-      <TouchableOpacity onPress={() => navigation.navigate("albums", items)}>
+      <TouchableOpacity
+        onPress={() => {
+          dispatch({
+            type: "setAlbum",
+            payload: {
+              album: items,
+            },
+          });
+          router.push("/album/[details]");
+        }}
+      >
         <HStack paddingBottom="4" alignItems="center" alignContent="center">
           <Box
             roundedBottomLeft="md"

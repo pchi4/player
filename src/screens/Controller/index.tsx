@@ -7,66 +7,38 @@ import {
   Progress,
 } from "@gluestack-ui/themed-native-base";
 import { Dimensions, TouchableOpacity, Platform } from "react-native";
-import { useStateValue } from "../context/State";
 import { Feather } from "@expo/vector-icons";
 import * as Device from "expo-device";
-import { useVerifyAlbum, useSetupPlayer } from "../hooks";
-import { useNavigation } from "@react-navigation/native";
 
 import * as React from "react";
+import TrackPlayer, {
+  useActiveTrack,
+  useProgress,
+  usePlaybackState,
+} from "react-native-track-player";
+import { router } from "expo-router";
 const { width, height } = Dimensions.get("screen");
 
-export const Controller = () => {
+export default function Controller() {
   var deviceModel = Device.deviceName;
-  const [context, dispatch] = useStateValue().reducer;
-  const [navigator, _] = useStateValue().navigator;
-  const { album } = useVerifyAlbum();
-  const { LoadAudio, currentSound } = useSetupPlayer({
-    uri: context.currentSound.uriTrack,
-    numberTrack: 0,
-    isRandom: false,
-  });
-  const PlayAudio = async () => {
-    try {
-      const currentStatus = await currentSound?.getStatusAsync();
-      if (currentStatus?.isLoaded) {
-        if (currentStatus?.isPlaying === false) {
-          currentSound?.playAsync();
-        }
-      }
-    } catch (error) {}
-  };
-  const PauseAudio = async () => {
-    try {
-      const currentStatus = await currentSound?.getStatusAsync();
-      if (currentStatus?.isLoaded) {
-        if (currentStatus?.isPlaying) {
-          currentSound?.pauseAsync();
-        }
-      }
-    } catch (error) {}
-  };
+
+  const track = useActiveTrack();
+  const progress = useProgress();
+  const status = usePlaybackState();
 
   return (
     <>
-      {context.album?.tracks?.items && (
-        <TouchableOpacity
-          onPress={() =>
-            navigator.navigate("home", {
-              screen: "playMusic",
-              params: album,
-            })
-          }
-        >
+      {track && (
+        <TouchableOpacity onPress={() => router.push("/play/[details]")}>
           <Box
-            width="96%"
+            width="100%"
             bg="#5C5E60"
             padding="2"
             marginX={2}
             fontSize="md"
             fontWeight="bold"
             rounded="md"
-            bottom={Platform.OS === "android" ? height / 50 : height / 46}
+            bottom={Platform.OS === "android" ? height / 80 : height / 46}
             position="absolute"
           >
             <HStack justifyContent="space-between">
@@ -77,11 +49,9 @@ export const Controller = () => {
                     width={width / 9}
                     height={width / 9}
                     source={{
-                      uri: context.album.tracks?.items
-                        ? context.album?.tracks?.items[
-                            context.album?.tracks.index
-                          ].images[2].url
-                        : "https://i.scdn.co/image/ab67616d0000b2731dc7483a9fcfce54822a2f19",
+                      uri:
+                        track.artwork ??
+                        "https://i.scdn.co/image/ab67616d0000b2731dc7483a9fcfce54822a2f19",
                     }}
                     fallbackSource={{
                       uri: "https://i.scdn.co/image/ab67616d0000b2731dc7483a9fcfce54822a2f19",
@@ -97,9 +67,7 @@ export const Controller = () => {
                       isTruncated
                       maxWidth={200}
                     >
-                      {context.album?.track.name +
-                        " - " +
-                        context.album?.track.artists[0].name}
+                      {track.title + " - " + track.artist}
                     </Text>
 
                     <HStack pl="2" alignItems="center">
@@ -125,12 +93,12 @@ export const Controller = () => {
                 >
                   <Feather name="speaker" size={24 % 100} color="#FFFFFF" />
                   <Feather name="plus-circle" size={24 % 100} color="#FFFFFF" />
-                  {context.currentSound.isPlaying ? (
-                    <TouchableOpacity onPress={PauseAudio}>
+                  {status.state === "playing" ? (
+                    <TouchableOpacity onPress={() => TrackPlayer.pause()}>
                       <Feather name="pause" size={24 % 100} color="#FFFFFF" />
                     </TouchableOpacity>
                   ) : (
-                    <TouchableOpacity onPress={PlayAudio}>
+                    <TouchableOpacity onPress={() => TrackPlayer.play()}>
                       <Feather name="play" size={24 % 100} color="#FFFFFF" />
                     </TouchableOpacity>
                   )}
@@ -139,14 +107,11 @@ export const Controller = () => {
             </HStack>
             <Progress
               mt={2}
-              width="100%"
-              // mx={context.currentSound.totalDuration / 1000}
+              style={{ marginHorizontal: 0 }}
+              //   width="100%"
+              mx={progress.duration / 1000}
               value={
-                Math.floor(
-                  (context?.statusSound?.playbackStatus?.positionMillis /
-                    context?.statusSound?.playbackStatus?.durationMillis) *
-                    100
-                ) ?? 0
+                Math.floor((progress.position / progress.duration) * 100) ?? 0
               }
               colorScheme="emerald"
               size="xs"
@@ -156,4 +121,4 @@ export const Controller = () => {
       )}
     </>
   );
-};
+}

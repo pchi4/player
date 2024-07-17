@@ -23,6 +23,7 @@ export const CardPlaylist = ({
       justifyContent="center"
       alignItems="center"
       paddingX="2"
+      paddingRight="4"
     >
       <TouchableOpacity onPress={handleClick}>
         <Box>

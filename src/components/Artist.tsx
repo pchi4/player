@@ -6,7 +6,7 @@ import {
   Stack,
   Text,
   Image,
-} from "native-base";
+} from "@gluestack-ui/themed-native-base";
 
 import { useStateValue } from "../context/State";
 export const Artist = () => {
@@ -16,7 +16,7 @@ export const Artist = () => {
 
   return (
     <Box
-      style={{ flex: 1 }}
+      style={{ flex: 1, paddingHorizontal: 10 }}
       marginTop={["10%", "18%", "20%"]}
       paddingX="8"
       paddingBottom="4"
