@@ -39,6 +39,7 @@ import TrackPlayer, {
   useIsPlaying,
   State,
   usePlaybackState,
+  useActiveTrack,
 } from "react-native-track-player";
 
 import Controller from "@/src/screens/Controller";
@@ -74,6 +75,7 @@ export default function Album() {
   const idArtist = album.artists[0].id;
 
   const playerState = usePlaybackState();
+  const track = useActiveTrack();
 
   useEffect(() => {
     LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
@@ -97,7 +99,34 @@ export default function Album() {
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
-  const handleDispatchs = async (index: number, item: object) => {
+  async function staterdAllTracks() {
+    if (playerState.state == "paused") {
+      await TrackPlayer.play();
+      return;
+    }
+
+    await TrackPlayer.reset();
+
+    const tracks = album.tracks.items.map((track: Track, idx: any) => {
+      return {
+        url: track.preview_url,
+        title: track.name,
+        artist: track.artists[0].name,
+        duartion: track.duration_ms,
+        album: album.name,
+        total: album.tracks.total,
+        artwork: album?.images[0].url,
+        number_track: track._track_number,
+        explicit: track.explicit,
+        index: idx,
+      };
+    });
+
+    await TrackPlayer.add(tracks);
+    await TrackPlayer.play();
+  }
+
+  const handlePLayTrack = async (index: number, item: object) => {
     try {
       await TrackPlayer.reset();
 
@@ -112,6 +141,7 @@ export default function Album() {
           artwork: album?.images[0].url,
           number_track: track._track_number,
           explicit: track.explicit,
+          index: idx,
         };
       });
 
@@ -255,13 +285,26 @@ export default function Album() {
                             color="#FFFFFF"
                           />
                         </TouchableOpacity>
-                        <TouchableOpacity>
-                          <Feather
-                            name={"play"}
-                            size={38 % 100}
-                            color="#FFFFFF"
-                          />
-                        </TouchableOpacity>
+
+                        {playerState.state == "paused" ? (
+                          <TouchableOpacity onPress={() => staterdAllTracks()}>
+                            <Feather
+                              name={"play"}
+                              size={38 % 100}
+                              color="#FFFFFF"
+                            />
+                          </TouchableOpacity>
+                        ) : (
+                          <TouchableOpacity
+                            onPress={async () => await TrackPlayer.pause()}
+                          >
+                            <Feather
+                              name={"pause"}
+                              size={38 % 100}
+                              color="#FFFFFF"
+                            />
+                          </TouchableOpacity>
+                        )}
                       </Box>
                     </Flex>
                   </Box>
@@ -269,56 +312,66 @@ export default function Album() {
                     data={album.tracks.items}
                     keyExtractor={(item) => String(item.id)}
                     nestedScrollEnabled={true}
-                    renderItem={({ item, index }) => (
-                      <Box
-                        _dark={{
-                          borderColor: "muted.50",
-                        }}
-                        borderColor="muted.800"
-                        py="2"
-                      >
-                        <TouchableOpacity
-                          onPress={() => handleDispatchs(index, item)}
+                    renderItem={({ item, index }) => {
+                      const isBackGround = index === album.tracks.items[index];
+                      // console.log({ isBackGround });
+                      return (
+                        <Box
+                          _dark={{
+                            borderColor: "muted.50",
+                          }}
+                          borderColor="muted.800"
+                          py="2"
                         >
-                          <HStack space={[2, 3]} justifyContent="space-between">
-                            <VStack>
+                          <TouchableOpacity
+                            onPress={() => handlePLayTrack(index, item)}
+                          >
+                            <HStack
+                              space={[2, 3]}
+                              justifyContent="space-between"
+                              style={{
+                                backgroundColor: isBackGround ? "green" : null,
+                              }}
+                            >
+                              <VStack>
+                                <Text
+                                  _dark={{
+                                    color: "warmGray.50",
+                                  }}
+                                  color="white"
+                                  bold
+                                  isTruncated
+                                  maxWidth={[280, 300]}
+                                  fontSize="md"
+                                >
+                                  {item.name}
+                                </Text>
+                                <Text
+                                  fontSize="xs"
+                                  color="white"
+                                  _dark={{
+                                    color: "warmGray.200",
+                                  }}
+                                >
+                                  {album?.artists[0].name}
+                                </Text>
+                              </VStack>
+                              <Spacer />
                               <Text
+                                fontSize="xs"
                                 _dark={{
                                   color: "warmGray.50",
                                 }}
                                 color="white"
-                                bold
-                                isTruncated
-                                maxWidth={[280, 300]}
-                                fontSize="md"
+                                alignSelf="flex-start"
                               >
-                                {item.name}
+                                {formatTime(item.duration_ms)}
                               </Text>
-                              <Text
-                                fontSize="xs"
-                                color="white"
-                                _dark={{
-                                  color: "warmGray.200",
-                                }}
-                              >
-                                {album?.artists[0].name}
-                              </Text>
-                            </VStack>
-                            <Spacer />
-                            <Text
-                              fontSize="xs"
-                              _dark={{
-                                color: "warmGray.50",
-                              }}
-                              color="white"
-                              alignSelf="flex-start"
-                            >
-                              {formatTime(item.duration_ms)}
-                            </Text>
-                          </HStack>
-                        </TouchableOpacity>
-                      </Box>
-                    )}
+                            </HStack>
+                          </TouchableOpacity>
+                        </Box>
+                      );
+                    }}
                   />
                 </Box>
 
