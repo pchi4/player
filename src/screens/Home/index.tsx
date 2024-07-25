@@ -7,14 +7,9 @@ import {
   LogBox,
   TouchableOpacity,
   Linking,
-} from "react-native";
-import {
-  HStack,
-  Box,
-  Text,
   FlatList,
-  Pressable,
-} from "@gluestack-ui/themed-native-base";
+} from "react-native";
+import { HStack, Box, Text, Pressable } from "@gluestack-ui/themed-native-base";
 import { useStateValue } from "@/src/context/State";
 import * as Liking from "expo-linking";
 
@@ -85,61 +80,31 @@ export default function Home() {
     return <Error />;
   }
 
-  if (
-    isLoading ||
-    isFetching ||
-    profileIsFetching ||
-    profileIsLoading ||
-    newReleasesIsLoading ||
-    newReleasesIsFetching ||
-    playlistFetching ||
-    playlistLoading
-  ) {
-    return <Loading />;
-  }
+  const headerComponent = () => {
+    return <></>;
+  };
 
-  return (
-    <Box padding="4">
-      <ScrollView>
-        <Box paddingTop="10">
-          <ThemedText type="title">Tocados recentes</ThemedText>
-        </Box>
-
-        <FlatList
-          style={{ paddingTop: StatusBar.currentHeight }}
-          data={data?.items.filter((_, idx) => {
-            return idx <= 7;
-          })}
-          numColumns={2}
-          keyExtractor={(item, idx) => String(item.album.id + idx)}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <CardHome items={item} navigation={router} />
-          )}
-        />
-
-        <Box paddingTop="6">
+  const footerComponent = () => {
+    return (
+      <>
+        <Box paddingTop="6" paddingBottom="6">
           <ThemedText type="title">
             Feito para {profile?.display_name}
           </ThemedText>
         </Box>
-
         <FlatList
           style={{ paddingTop: StatusBar.currentHeight }}
           data={data?.items.filter((_, idx) => {
             return idx > 7;
           })}
-          keyExtractor={(item, idx) => String(idx)}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
           horizontal
+          keyExtractor={(item, idx) => String(idx)}
           renderItem={({ item }) => (
             <CardAlbum width={250} height={250} items={item} />
           )}
         />
 
-        <Box paddingTop="6">
+        <Box paddingTop="6" paddingBottom="6">
           <ThemedText type="title">Suas playlists</ThemedText>
         </Box>
 
@@ -166,7 +131,7 @@ export default function Home() {
           )}
         />
 
-        <Box paddingTop="6">
+        <Box paddingTop="6" paddingBottom="6">
           <ThemedText type="title">Novidades na área</ThemedText>
         </Box>
 
@@ -187,7 +152,42 @@ export default function Home() {
             />
           )}
         />
-      </ScrollView>
+      </>
+    );
+  };
+
+  if (
+    isLoading ||
+    isFetching ||
+    profileIsFetching ||
+    profileIsLoading ||
+    newReleasesIsLoading ||
+    newReleasesIsFetching ||
+    playlistFetching ||
+    playlistLoading
+  ) {
+    return <Loading />;
+  }
+
+  return (
+    <Box padding="4">
+      <FlatList
+        style={{ paddingTop: StatusBar.currentHeight }}
+        data={data?.items.filter((_, idx) => {
+          return idx <= 7;
+        })}
+        numColumns={2}
+        keyExtractor={(item, idx) => String(item.album.id + idx)}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        ListHeaderComponent={
+          <Box paddingTop="10" paddingBottom="6">
+            <ThemedText type="title">Tocados recentes</ThemedText>
+          </Box>
+        }
+        renderItem={({ item }) => <CardHome items={item} navigation={router} />}
+        ListFooterComponent={footerComponent}
+      />
       <Controller />
     </Box>
   );

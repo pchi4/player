@@ -40,6 +40,7 @@ export default function Controller() {
             rounded="md"
             bottom={Platform.OS === "android" ? height / 80 : height / 46}
             position="absolute"
+            style={{ position: "absolute" }}
           >
             <HStack justifyContent="space-between">
               <Box>
@@ -63,24 +64,22 @@ export default function Controller() {
                       pl={2}
                       color="white"
                       fontWeight="bold"
+                      fontSize="md"
+                      isTruncated
+                      maxWidth={200}
+                    >
+                      {track.title}
+                    </Text>
+
+                    <Text
+                      pl={2}
+                      color="white"
                       fontSize="xs"
                       isTruncated
                       maxWidth={200}
                     >
-                      {track.title + " - " + track.artist}
+                      {track.artist}
                     </Text>
-
-                    <HStack pl="2" alignItems="center">
-                      <Feather name="speaker" size={20 % 100} color="white" />
-                      <Text
-                        color="white"
-                        pl={1}
-                        fontWeight="bold"
-                        fontSize="md"
-                      >
-                        {deviceModel}
-                      </Text>
-                    </HStack>
                   </VStack>
                 </HStack>
               </Box>
@@ -92,7 +91,6 @@ export default function Controller() {
                   pt={3}
                 >
                   <Feather name="speaker" size={24 % 100} color="#FFFFFF" />
-                  <Feather name="plus-circle" size={24 % 100} color="#FFFFFF" />
                   {status.state === "playing" ? (
                     <TouchableOpacity onPress={() => TrackPlayer.pause()}>
                       <Feather name="pause" size={24 % 100} color="#FFFFFF" />

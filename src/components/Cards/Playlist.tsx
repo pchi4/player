@@ -18,7 +18,6 @@ export const CardPlaylist = ({
 }: PropsCardPlaylist) => {
   return (
     <Box
-      style={{ flexBasis: 0 }}
       paddingBottom="4"
       justifyContent="center"
       alignItems="center"

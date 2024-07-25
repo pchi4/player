@@ -2,13 +2,7 @@ import {
   Center,
   Text,
   Box,
-  Heading,
-  Button,
   HStack,
-  VStack,
-  Avatar,
-  AspectRatio,
-  Stack,
   Flex,
 } from "@gluestack-ui/themed-native-base";
 import {
@@ -21,44 +15,36 @@ import {
 
 import { useStateValue } from "@/src/context/State";
 import { LinearGradient } from "expo-linear-gradient";
-
 import Slider from "@react-native-community/slider";
-
-import { Audio, AVPlaybackTolerance } from "expo-av";
-import {
-  useState,
-  useEffect,
-  useRef,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
+import { useImageColors } from "@/src/hooks";
+import { useState } from "react";
 import { Loading } from "@/src/components/Loading";
 import { Feather } from "@expo/vector-icons";
-import { Sound } from "expo-av/build/Audio";
-
 import { useGetDetailsArtist } from "./hooks";
 import { SafeAreaView } from "react-native-safe-area-context";
-// import { useSetupPlayer } from "@/src/hooks";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import TrackPlayer, {
   useActiveTrack,
   useProgress,
   usePlaybackState,
+  RepeatMode,
 } from "react-native-track-player";
 import { Artist } from "@/src/components/Artist";
 import { router } from "expo-router";
+import Buffering from "@/src/components/Buffering";
 
-// The player is ready to be used
 const { width, height } = Dimensions.get("screen");
 
 export default function Play() {
   const [context, dispatch] = useStateValue().reducer;
-  // const value = useRef(route.params.album.tracks.index);
-  // const numberTrackPlaylist = useRef(JSON.parse(route.params)?.tracks.index);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isReapeat, setIsRepeat] = useState(false);
+  const [isRandom, setIsRandom] = useState(false);
 
   const track = useActiveTrack();
-  const position = useProgress();
+  const { position, duration } = useProgress();
   const status = usePlaybackState();
+
+  const { colors } = useImageColors();
 
   const formatingFollowers = (follower: any) => {
     var followers = follower?.toFixed(3).split(".");
@@ -66,44 +52,14 @@ export default function Play() {
     return followers.join(",");
   };
 
-  const generationShuffleNumber = (array: Array<any>) => {
-    let currentIndex = array.length,
-      randomIndex;
+  const formatSecondsToMinutes = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
 
-    while (currentIndex > 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex],
-        array[currentIndex],
-      ];
-    }
-
-    return array;
+    const formattedMinutes = String(minutes).padStart(2, "0");
+    const formattedSeconds = String(remainingSeconds).padStart(2, "0");
+    return `${formattedMinutes}:${formattedSeconds}`;
   };
-
-  // const onChangeSlider = async (time: number) => {
-  //   await currentSound?.playFromPositionAsync(time * 1000);
-  // };
-
-  const formatTime = (time: number): string => {
-    const minutes = Math.floor(time / 60000);
-    const seconds = Math.floor((time % 60000) / 1000);
-    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-  };
-
-  // const createRandomTracks = (): number => {
-  //   return Math.floor(
-  //     Math.random() * route.params.album.tracks.items.length + 1
-  //   );
-  // };
-
-  // console.log(context.statusSound);
-
-  // if (isLoading && isFetching) {
-  //   return <Loading />;
-  // }
 
   const formatedValueSlider = (value: number): number => {
     if (!value) return 0;
@@ -115,12 +71,24 @@ export default function Play() {
     return value / 1000;
   };
 
+  if (
+    status.state == "buffering" ||
+    status.state == "loading" ||
+    status.state == "ready"
+  ) {
+    return <Buffering />;
+  }
+
   return (
     <Box style={{ flex: 1 }}>
       <ScrollView>
         <LinearGradient
           style={{ height: "100%" }}
-          colors={["#a3a5a8", "#212224", "#212224"]}
+          colors={
+            colors
+              ? [colors?.colorOne.value, colors?.colorTwo.value]
+              : [colors?.background]
+          }
         >
           <SafeAreaView>
             <Box style={{ flex: 1 }} padding="4">
@@ -199,7 +167,7 @@ export default function Play() {
                     fontWeight="bold"
                     fontSize="lg"
                     isTruncated
-                    maxW={270}
+                    maxW={width / 1.3}
                   >
                     {track?.title}
                   </Text>
@@ -208,9 +176,9 @@ export default function Play() {
                     {track?.artist}
                   </Text>
                 </Box>
-                {/* 
+
                 <Box alignItems="center" justifyContent="center">
-                   {isFavorite ? (
+                  {isFavorite ? (
                     <TouchableOpacity
                       onPress={() => setIsFavorite(!isFavorite)}
                     >
@@ -222,14 +190,14 @@ export default function Play() {
                     >
                       <Feather name={"heart"} size={35 % 100} color="#FFFFFF" />
                     </TouchableOpacity>
-                  )} 
-                </Box> */}
+                  )}
+                </Box>
               </HStack>
 
               <Slider
                 style={{ height: 40, width: "100%" }}
-                value={formatedValueSlider(Number(position.position))}
-                maximumValue={verifyNumberMaxSlider(Number(position.duration))}
+                value={formatedValueSlider(Number(position))}
+                maximumValue={verifyNumberMaxSlider(Number(duration))}
                 minimumTrackTintColor="#FFFFFF"
                 maximumTrackTintColor="#FFFFFF"
                 // onValueChange={(value) => onChangeSlider(value)}
@@ -245,14 +213,14 @@ export default function Play() {
                   fontWeight="bold"
                   fontSize={["md", "md", "lg"]}
                 >
-                  {formatTime(position.position)}
+                  {formatSecondsToMinutes(position)}
                 </Text>
                 <Text
                   color="#FFFFFF"
                   fontWeight="bold"
                   fontSize={["md", "md", "lg"]}
                 >
-                  {formatTime(position?.duration)}
+                  {formatSecondsToMinutes(duration)}
                 </Text>
               </HStack>
 
@@ -263,7 +231,7 @@ export default function Play() {
                 alignItems="center"
                 marginTop={["0", "4", "6"]}
               >
-                {/* <Box
+                <Box
                   justifyContent="start"
                   alignItems="start"
                   alignContent="start"
@@ -276,9 +244,9 @@ export default function Play() {
                     <TouchableOpacity onPress={() => setIsRandom(!isRandom)}>
                       <Feather name="shuffle" size={20 % 100} color="#FFFFFF" />
                     </TouchableOpacity>
-                  )} 
-                </Box> */}
-                <TouchableOpacity onPress={() => TrackPlayer.skipToNext()}>
+                  )}
+                </Box>
+                <TouchableOpacity onPress={() => TrackPlayer.skipToPrevious()}>
                   <Feather name="skip-back" size={40 % 100} color="#FFFFFF" />
                 </TouchableOpacity>
 
@@ -292,22 +260,27 @@ export default function Play() {
                   </TouchableOpacity>
                 )}
 
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => TrackPlayer.skipToNext()}>
                   <Feather
                     name="skip-forward"
                     size={40 % 100}
                     color="#FFFFFF"
                   />
                 </TouchableOpacity>
-                {/* {isReapeat ? (
+                {isReapeat ? (
                   <TouchableOpacity onPress={() => setIsRepeat(!isReapeat)}>
                     <Feather name="repeat" size={20 % 100} color="green" />
                   </TouchableOpacity>
                 ) : (
-                  <TouchableOpacity onPress={() => setIsRepeat(!isReapeat)}>
+                  <TouchableOpacity
+                    onPress={async () => {
+                      setIsRepeat(!isReapeat);
+                      await TrackPlayer.setRepeatMode(RepeatMode.Queue);
+                    }}
+                  >
                     <Feather name="repeat" size={20 % 100} color="#FFFFFF" />
                   </TouchableOpacity>
-                )}  */}
+                )}
               </HStack>
             </Box>
 
