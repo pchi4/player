@@ -8,6 +8,7 @@ import {
   Pressable,
 } from "@gluestack-ui/themed-native-base";
 import { PropsCardNewsReleases } from "../../types/NewRealeases/propsNewRealeases";
+import { ThemedText } from "../ThemedText";
 
 export const CardNewsReleases = ({
   items,
@@ -32,21 +33,16 @@ export const CardNewsReleases = ({
           />
         </Box>
         <Box>
-          <Text
-            fontSize="xl"
-            fontWeight="bold"
-            color="white"
-            isTruncated
-            width="200"
-          >
+          <ThemedText type="subtitle" style={{ width: 200 }} numberOfLines={1}>
             {items.name}
-          </Text>
-          <Text fontSize="md" color="white" isTruncated width="200">
+          </ThemedText>
+
+          <ThemedText type="default" style={{ width: 200 }} numberOfLines={1}>
             {items.type[0].toUpperCase() +
               items.type.slice(1) +
               " ° " +
               items.artists[0].name}
-          </Text>
+          </ThemedText>
         </Box>
       </Pressable>
     </Box>

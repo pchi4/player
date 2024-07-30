@@ -32,7 +32,7 @@ import { Artist } from "@/src/components/Artist";
 import { router } from "expo-router";
 import Buffering from "@/src/components/Buffering";
 
-const { width, height } = Dimensions.get("screen");
+const { width } = Dimensions.get("screen");
 
 export default function Play() {
   const [context, dispatch] = useStateValue().reducer;
@@ -44,7 +44,7 @@ export default function Play() {
   const { position, duration } = useProgress();
   const status = usePlaybackState();
 
-  const { colors } = useImageColors();
+  const { colors, loading } = useImageColors();
 
   const formatingFollowers = (follower: any) => {
     var followers = follower?.toFixed(3).split(".");
@@ -72,6 +72,7 @@ export default function Play() {
   };
 
   if (
+    loading ||
     status.state == "buffering" ||
     status.state == "loading" ||
     status.state == "ready"

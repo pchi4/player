@@ -20,6 +20,7 @@ import { PlaybackService } from "@/src/services/PlaybackService";
 import { StateProvider } from "@/src/context/State";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useVerifyToken } from "@/src/hooks";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -59,6 +60,8 @@ function Navigator() {
     SpaceMono: require("../../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
+  const { token } = useVerifyToken();
+
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
@@ -73,8 +76,11 @@ function Navigator() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <SafeAreaProvider>
         <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          {token ? (
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          ) : (
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+          )}
         </Stack>
       </SafeAreaProvider>
     </ThemeProvider>

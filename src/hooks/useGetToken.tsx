@@ -12,6 +12,7 @@ import { Platform } from "react-native";
 import * as Liking from "expo-linking";
 import * as WebBrowser from "expo-web-browser";
 import { router } from "expo-router";
+import React from "react";
 
 export const useGetToken = () => {
   const [context, dispatch] = useStateValue().reducer;
@@ -22,8 +23,6 @@ export const useGetToken = () => {
     authorizationEndpoint: "https://accounts.spotify.com/authorize",
     tokenEndpoint: "https://accounts.spotify.com/api/token",
   };
-
-  console.log(process.env.EXPO_PUBLIC_API_CLIENT_ID);
 
   const config = {
     clientId: process.env.EXPO_PUBLIC_API_CLIENT_ID,
@@ -39,7 +38,9 @@ export const useGetToken = () => {
       "playlist-modify-public",
     ],
     usePKCE: false,
-    redirectUri: "exp://192.168.10.5:8081/--/spotify-auth-callback",
+    redirectUri: makeRedirectUri({
+      scheme: "myapp",
+    }),
   };
 
   function generateCodeVerifier(length: number): string {
@@ -55,29 +56,53 @@ export const useGetToken = () => {
 
   const [request, response, promptAsync] = useAuthRequest(config, discovery);
 
-  const getToken = async (code: string) => {
-    try {
-      let codeVerifer = generateCodeVerifier(128);
-      const data = {
-        grant_type: "authorization_code",
-        code,
-        redirect_uri: "exp://192.168.10.5:8081/--/spotify-auth-callback",
-        client_id: process.env.EXPO_PUBLIC_API_CLIENT_ID,
-        code_verifier: codeVerifer,
-        client_secret: process.env.EXPO_PULIBC_API_CLIENT_SECRET,
-      };
+  React.useEffect(() => {
+    if (response?.type === "success") {
+      const { code } = response.params;
+    }
+  }, [response]);
 
-      const result = await apiInstance(
-        "https://accounts.spotify.com/api/token",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          data: new URLSearchParams(data).toString(),
-        }
-      );
+  console.log(
+    makeRedirectUri({
+      scheme: "myapp",
+    })
+  );
+
+  const getToken = async (code: string) => {
+    let codeVerifer = generateCodeVerifier(128);
+
+    const params = new URLSearchParams();
+    params.append("client_id", String(process.env.EXPO_PUBLIC_API_CLIENT_ID));
+    params.append("grant_type", "authorization_code");
+    params.append("code", code);
+    params.append(
+      "redirect_uri",
+      makeRedirectUri({
+        scheme: "myapp",
+      })
+    );
+    params.append("code_verifier", codeVerifer);
+
+    try {
+      // const data = {
+      //   grant_type: "authorization_code",
+      //   code,
+      //   redirect_uri: makeRedirectUri({
+      //     scheme: "myapp",
+      //   }),
+      //   client_id: process.env.EXPO_PUBLIC_API_CLIENT_ID,
+      //   code_verifier: codeVerifer,
+      //   client_secret: process.env.EXPO_PULIBC_API_CLIENT_SECRET,
+      // };
+
+      const result = await axios("https://accounts.spotify.com/api/token", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "content-Type": "application/x-www-form-urlencoded",
+        },
+        data: params,
+      });
 
       console.log({ result });
 
@@ -93,16 +118,21 @@ export const useGetToken = () => {
             },
           },
         });
+        router.replace("/components");
       }
     } catch (error) {
       console.log({ error });
     }
   };
 
+  // console.log(request, response);
+
   const accessToken = async () => {
     try {
-      const resultPromptAsync = await promptAsync({ showInRecents: true });
+      const resultPromptAsync = await promptAsync();
       await AsyncStorage.clear();
+
+      console.log(resultPromptAsync);
 
       await getToken(resultPromptAsync?.params?.code);
 
@@ -123,7 +153,7 @@ export const useGetToken = () => {
       // console.log(result.data);
       // console.log(resultBrowser);
     } catch (error) {
-      // console.log(error);
+      console.log(error);
     }
   };
 

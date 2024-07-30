@@ -21,15 +21,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Auth() {
   const { accessToken } = useGetToken();
 
-  //   const { resquestPermissions } = useSetupPlayer({
-  //     uri: null,
-  //     isRandom: false,
-  //   });
-
-  //   useEffect(() => {
-  //     resquestPermissions();
-  //   }, []);
-
   return (
     <Box style={{ flex: 1 }}>
       <ImageBackground
@@ -56,11 +47,7 @@ export default function Auth() {
               marginTop={["8", "12", "10"]}
               onPress={async () => {
                 try {
-                  await AsyncStorage.setItem(
-                    "token",
-                    "BQAulRmZtl_091GtRRsqtEUtCc7VtS6MWGYnEksPSbMXk_1XAtELBGb-Ilbjm5T0rN2LlfPXqunI0-VjOcBJV9xw_kfu2bAayGDlT7HM_GD8EXF9f96zy4ZGAX3JhKY6WC8ZTIrdL6pwfFbGgXt3KTesJ6-BiUwenRMFPfzqFwmrM2RtNfXd3ifI8euBez_MjtLZaKFemDIYySU"
-                  );
-                  router.replace("/components");
+                  await accessToken();
                 } catch (error) {}
               }}
               bg="blue.500"

@@ -2,25 +2,11 @@ import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   FlatList,
-  StatusBar,
-  ScrollView,
   View,
   Dimensions,
+  useColorScheme,
 } from "react-native";
-import {
-  HStack,
-  Box,
-  Divider,
-  Center,
-  Image,
-  Text,
-  VStack,
-  Icon,
-  Button,
-  Spinner,
-  Pressable,
-  Heading,
-} from "@gluestack-ui/themed-native-base";
+import { Box, Pressable, Avatar } from "@gluestack-ui/themed-native-base";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -30,24 +16,71 @@ import { Loading } from "@/src/components/Loading";
 import { Feather } from "@expo/vector-icons";
 
 import { router } from "expo-router";
+import { ThemedText } from "@/src/components/ThemedText";
 
 const HeaderList = () => {
+  const colorScheme = useColorScheme();
+
   return (
-    <Box>
-      <HStack
-        justifyContent="space-between"
-        marginRight="4"
-        paddingY="2"
-        space="8"
+    <View
+      style={{
+        backgroundColor: colorScheme === "dark" ? "black" : "white",
+        paddingTop: 10,
+      }}
+    >
+      <View
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexDirection: "row",
+        }}
       >
-        <Text marginLeft="4" fontSize="md" fontWeight="bold" color="white">
-          Adicionado recentemente
-        </Text>
-        <Pressable>
-          <Feather name={"align-justify"} size={25 % 100} color="#FFFFFF" />
-        </Pressable>
-      </HStack>
-    </Box>
+        <View style={{ flexDirection: "row" }}>
+          <Avatar
+            marginLeft="2"
+            bg="green.500"
+            size="sm"
+            source={{
+              uri: "https://i.scdn.co/image/ab67616d0000b2732c5b24ecfa39523a75c993c4",
+            }}
+          ></Avatar>
+
+          <ThemedText style={{ marginLeft: 4 }} type="subtitle">
+            Sua Biblioteca
+          </ThemedText>
+        </View>
+        <View style={{ flexDirection: "row", marginHorizontal: 4 }}>
+          <Pressable>
+            <Feather name={"align-justify"} size={25 % 100} color="#FFFFFF" />
+          </Pressable>
+          <Pressable>
+            <Feather name={"align-justify"} size={25 % 100} color="#FFFFFF" />
+          </Pressable>
+        </View>
+      </View>
+
+      <FlatList
+        data={["Playlist", "Podcasts", "Àlbuns", "Artistas", "Baixado"]}
+        keyExtractor={(item) => String(item?.id)}
+        horizontal
+        renderItem={({ item }) => (
+          <View
+            style={{
+              width: 100,
+              padding: 2,
+              backgroundColor: colorScheme === "dark" ? "gray" : "gray",
+              margin: 8,
+              borderRadius: 30,
+            }}
+          >
+            <ThemedText style={{ textAlign: "center" }} type="default">
+              {item}
+            </ThemedText>
+          </View>
+        )}
+      />
+    </View>
   );
 };
 
@@ -60,32 +93,27 @@ export default function Library() {
 
   return (
     <SafeAreaView>
-      <Box bg="rgb(24, 26, 27)">
-        <Box
-          paddingBottom={StatusBar.currentHeight}
-          paddingTop={StatusBar.currentHeight}
-          justifyContent="space-between"
-        >
-          <FlatList
-            data={data?.items}
-            numColumns={3}
-            ListHeaderComponent={() => <HeaderList />}
-            keyExtractor={(item) => String(item?.id)}
-            showsVerticalScrollIndicator={false}
-            ccontentContainerStyle={{ gap: 5 }}
-            columnWrapperStyle={{ gap: 5 }}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <CardLibrary
-                items={item}
-                navigation={navigation}
-                handleClick={() => navigation.navigate("playlists", { item })}
-                Width={null}
-                Height={null}
-              />
-            )}
-          />
-        </Box>
+      <Box style={{ paddingTop: 30 }} justifyContent="space-between">
+        <FlatList
+          data={data?.items}
+          numColumns={3}
+          ListHeaderComponent={HeaderList}
+          keyExtractor={(item) => String(item?.id)}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ gap: 10 }}
+          columnWrapperStyle={{ gap: 10 }}
+          stickyHeaderIndices={[0]}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <CardLibrary
+              items={item}
+              navigation={router}
+              handleClick={() => router.navigate("playlists")}
+              Width={null}
+              Height={null}
+            />
+          )}
+        />
       </Box>
     </SafeAreaView>
   );

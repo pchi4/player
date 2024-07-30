@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { getColors } from "react-native-image-colors";
-import { Track, useActiveTrack } from "react-native-track-player";
+import { useActiveTrack } from "react-native-track-player";
 
 export const useImageColors = () => {
+  const [loading, setLoading] = useState(true);
   const [colors, setColors] = React.useState<object | null>({
     colorOne: { value: "", name: "" },
     colorTwo: { value: "", name: "" },
@@ -43,11 +44,11 @@ export const useImageColors = () => {
         default:
           throw new Error("Unexpected platform");
       }
-      setColors(colors);
+      setLoading(false);
     };
 
-    fetchColors();
+    fetchColors().catch((error) => console.log(error));
   }, [track?.artwork]);
 
-  return { colors };
+  return { colors, loading };
 };

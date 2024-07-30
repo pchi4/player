@@ -8,6 +8,7 @@ import {
   Pressable,
 } from "@gluestack-ui/themed-native-base";
 import { PropsCardPlaylist } from "../../types/Playlist/propsCardPlaylist";
+import { ThemedText } from "../ThemedText";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -17,11 +18,13 @@ export const CardLibrary = ({
   handleClick,
 }: PropsCardPlaylist) => {
   return (
-    <Box
-      paddingBottom="4"
-      justifyContent="center"
-      alignItems="center"
-      paddingX="2"
+    <View
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+        paddingHorizontal: 4,
+        alignContent: "center",
+      }}
     >
       <TouchableOpacity onPress={handleClick}>
         <Box>
@@ -37,23 +40,26 @@ export const CardLibrary = ({
           />
         </Box>
         <Box>
-          <Text
-            fontSize="md"
-            fontWeight="bold"
-            color="white"
-            isTruncated
-            width={width / 4}
+          <ThemedText
+            type="subtitle"
+            style={{ width: width / 4 }}
+            numberOfLines={1}
           >
             {items.name}
-          </Text>
-          <Text fontSize="sm" color="white" isTruncated width={width / 4}>
+          </ThemedText>
+
+          <ThemedText
+            type="default"
+            style={{ width: width / 4 }}
+            numberOfLines={1}
+          >
             {items.type[0].toUpperCase() +
               items.type.slice(1) +
               " ° " +
               items?.owner?.display_name}
-          </Text>
+          </ThemedText>
         </Box>
       </TouchableOpacity>
-    </Box>
+    </View>
   );
 };

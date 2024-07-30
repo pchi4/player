@@ -5,3 +5,4 @@ export * from "./useVerifyControler";
 export * from "./useSetupPlayer";
 export * from "./useLogTrackerPlayer";
 export * from "./useImageColors";
+export * from "./useCustomFlatListHook";
