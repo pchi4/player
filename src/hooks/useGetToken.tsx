@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {
+import AuthSession, {
   ResponseType,
   useAuthRequest,
   makeRedirectUri,
 } from "expo-auth-session";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useStateValue } from "@/src/context/State";
 import apiInstance from "../services/api";
@@ -14,10 +15,10 @@ import * as WebBrowser from "expo-web-browser";
 import { router } from "expo-router";
 import React from "react";
 
+WebBrowser.maybeCompleteAuthSession();
+
 export const useGetToken = () => {
   const [context, dispatch] = useStateValue().reducer;
-
-  const redirectURL = Liking.createURL("auth/teste");
 
   const discovery = {
     authorizationEndpoint: "https://accounts.spotify.com/authorize",
@@ -26,7 +27,7 @@ export const useGetToken = () => {
 
   const config = {
     clientId: process.env.EXPO_PUBLIC_API_CLIENT_ID,
-    clientSecret: process.env.EXPO_PULIBC_API_CLIENT_SECRET,
+    clientSecret: process.env.EXPO_PUBLIC_API_URL,
     scopes: [
       "user-read-email",
       "user-library-read",
@@ -39,7 +40,9 @@ export const useGetToken = () => {
     ],
     usePKCE: false,
     redirectUri: makeRedirectUri({
+      native: "myapp://",
       scheme: "myapp",
+      path: "redirect-callback",
     }),
   };
 
@@ -56,44 +59,22 @@ export const useGetToken = () => {
 
   const [request, response, promptAsync] = useAuthRequest(config, discovery);
 
-  React.useEffect(() => {
-    if (response?.type === "success") {
-      const { code } = response.params;
-    }
-  }, [response]);
-
-  console.log(
-    makeRedirectUri({
-      scheme: "myapp",
-    })
-  );
-
   const getToken = async (code: string) => {
     let codeVerifer = generateCodeVerifier(128);
 
-    const params = new URLSearchParams();
-    params.append("client_id", String(process.env.EXPO_PUBLIC_API_CLIENT_ID));
-    params.append("grant_type", "authorization_code");
-    params.append("code", code);
-    params.append(
-      "redirect_uri",
-      makeRedirectUri({
-        scheme: "myapp",
-      })
-    );
-    params.append("code_verifier", codeVerifer);
-
     try {
-      // const data = {
-      //   grant_type: "authorization_code",
-      //   code,
-      //   redirect_uri: makeRedirectUri({
-      //     scheme: "myapp",
-      //   }),
-      //   client_id: process.env.EXPO_PUBLIC_API_CLIENT_ID,
-      //   code_verifier: codeVerifer,
-      //   client_secret: process.env.EXPO_PULIBC_API_CLIENT_SECRET,
-      // };
+      const data = {
+        grant_type: "authorization_code",
+        code,
+        redirect_uri: makeRedirectUri({
+          native: "myapp://",
+          scheme: "myapp",
+          path: "redirect-callback",
+        }),
+        client_id: process.env.EXPO_PUBLIC_API_CLIENT_ID,
+        code_verifier: codeVerifer,
+        client_secret: process.env.EXPO_PUBLIC_API_URL,
+      };
 
       const result = await axios("https://accounts.spotify.com/api/token", {
         method: "POST",
@@ -101,10 +82,8 @@ export const useGetToken = () => {
           Accept: "application/json",
           "content-Type": "application/x-www-form-urlencoded",
         },
-        data: params,
+        data: new URLSearchParams(data).toString(),
       });
-
-      console.log({ result });
 
       if (result.data && result.data.access_token) {
         await AsyncStorage.setItem("token", result.data.access_token);
@@ -118,7 +97,7 @@ export const useGetToken = () => {
             },
           },
         });
-        router.replace("/components");
+        router.replace("(auth)/(tabs)");
       }
     } catch (error) {
       console.log({ error });
