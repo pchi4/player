@@ -4,20 +4,20 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { router, Stack } from "expo-router";
+import { router, Stack, Redirect, Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import { NativeBaseProvider } from "@gluestack-ui/themed-native-base";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { StatusBar } from "react-native";
+import { Platform, StatusBar } from "react-native";
 import React from "react";
 import TrackPlayer from "react-native-track-player";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { useSetupTrackPlayer, useLogTrackPlayerState } from "@/src/hooks";
 import { PlaybackService } from "@/src/services/PlaybackService";
-import { StateProvider } from "@/src/context/State";
+import { StateProvider, useStateValue } from "@/src/context/State";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useVerifyToken } from "@/src/hooks";
@@ -25,6 +25,11 @@ import { useVerifyToken } from "@/src/hooks";
 SplashScreen.preventAutoHideAsync();
 
 TrackPlayer.registerPlaybackService(() => PlaybackService);
+
+export const unstable_settings = {
+  // Ensure that reloading on `/modal` keeps a back button present.
+  initialRouteName: "index",
+};
 
 export default function RootLayout() {
   const handleTrackPlayerLoaded = React.useCallback(() => {
@@ -34,33 +39,14 @@ export default function RootLayout() {
   useSetupTrackPlayer({
     onLoad: handleTrackPlayerLoaded,
   });
-
-  const queryClient = new QueryClient();
-
-  useLogTrackPlayerState();
-
-  return (
-    <StateProvider>
-      <QueryClientProvider client={queryClient}>
-        <NativeBaseProvider>
-          <GestureHandlerRootView>
-            <Navigator />
-            <StatusBar barStyle="default" />
-          </GestureHandlerRootView>
-        </NativeBaseProvider>
-      </QueryClientProvider>
-    </StateProvider>
-  );
-}
-
-function Navigator() {
   const [isLoged] = useState(true);
-  const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
-  const { token } = useVerifyToken();
+  const queryClient = new QueryClient();
+
+  useLogTrackPlayerState();
 
   useEffect(() => {
     if (loaded) {
@@ -73,16 +59,25 @@ function Navigator() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <SafeAreaProvider>
-        <Stack>
-          {token ? (
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          ) : (
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-          )}
-        </Stack>
-      </SafeAreaProvider>
-    </ThemeProvider>
+    <StateProvider>
+      <QueryClientProvider client={queryClient}>
+        <Navigator />
+      </QueryClientProvider>
+    </StateProvider>
+  );
+}
+
+function Navigator() {
+  const colorScheme = useColorScheme();
+
+  return (
+    <NativeBaseProvider>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <GestureHandlerRootView>
+          <Slot />
+          <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
+        </GestureHandlerRootView>
+      </ThemeProvider>
+    </NativeBaseProvider>
   );
 }
