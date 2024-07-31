@@ -14,7 +14,7 @@ const { width, height } = Dimensions.get("screen");
 import { useEffect } from "react";
 import { ThemedView } from "@/src/components/ThemedView";
 import { ThemedText } from "@/src/components/ThemedText";
-import { router } from "expo-router";
+import { router, Stack } from "expo-router";
 import React from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -23,6 +23,8 @@ export default function Auth() {
 
   return (
     <Box style={{ flex: 1 }}>
+      <Stack.Screen options={{ headerShown: false }} />
+
       <ImageBackground
         source={require("../../assets/images/login.jpeg")}
         resizeMode="cover"

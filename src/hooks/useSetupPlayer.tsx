@@ -33,7 +33,7 @@ const setupPlayer = async () => {
     // icon: require("./notification-icon.png"),
   });
 
-  await TrackPlayer.setVolume(0.3); // not too loud
+  await TrackPlayer.setVolume(1.0); // not too loud
   await TrackPlayer.setRepeatMode(RepeatMode.Queue);
 };
 

@@ -77,7 +77,7 @@ export default function Play() {
     status.state == "loading" ||
     status.state == "ready"
   ) {
-    return <Buffering />;
+    return <Loading />;
   }
 
   return (

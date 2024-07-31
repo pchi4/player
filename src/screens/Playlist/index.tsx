@@ -31,16 +31,21 @@ import { useGetTracksPlaylist, useGetProfile } from "./hooks";
 import { Loading } from "@/src/components/Loading";
 import { LinearGradient } from "expo-linear-gradient";
 import { Feather } from "@expo/vector-icons";
+import { useStateValue } from "@/src/context/State";
 
 const { width, height } = Dimensions.get("screen");
 
 export default function Playlist() {
+  const [context, dispatch] = useStateValue().reducer;
+
   const verifyLimitMax100 = (value: number): number => {
     if (value >= 100) {
       return 100;
     }
     return value;
   };
+
+  console.log(context.playlist.owner.id);
 
   // const {
   //   data: tracksPlaylist,

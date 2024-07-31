@@ -52,6 +52,11 @@ export default (state = initial, action: { type: string }) => {
       return { ...state, statusSound: action.payload.statusSound };
       break;
 
+    case "setPlaylist":
+      AsyncStorage.setItem("status", JSON.stringify(action.payload.playlist));
+      return { ...state, playlist: action.payload.playlist };
+      break;
+
     case "setArtist":
       AsyncStorage.setItem("artist", JSON.stringify(action.payload.artist));
       return { ...state, artist: action.payload.artist };

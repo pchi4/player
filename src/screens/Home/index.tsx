@@ -93,7 +93,6 @@ export default function Home() {
           </ThemedText>
         </Box>
         <FlatList
-          style={{ paddingTop: StatusBar.currentHeight }}
           data={data?.items.filter((_, idx) => {
             return idx > 7;
           })}
@@ -109,7 +108,6 @@ export default function Home() {
         </Box>
 
         <FlatList
-          style={{ paddingTop: StatusBar.currentHeight }}
           data={playlist?.items}
           keyExtractor={(item, idx) => String(idx)}
           showsVerticalScrollIndicator={false}
@@ -121,12 +119,15 @@ export default function Home() {
               Height={250}
               items={item}
               navigation={router}
-              // handleClick={() =>
-              //   router.navigate("playlists", {
-              //     item,
-              //     limit: item.tracks.total,
-              //   })
-              // }
+              handleClick={() => {
+                dispatch({
+                  type: "setPlaylist",
+                  payload: {
+                    playlist: item,
+                  },
+                });
+                router.push("/playlist/[details]");
+              }}
             />
           )}
         />
@@ -136,7 +137,6 @@ export default function Home() {
         </Box>
 
         <FlatList
-          style={{ paddingTop: StatusBar.currentHeight }}
           data={newsRealeases?.albums?.items}
           keyExtractor={(_item, idx) => String(idx)}
           showsVerticalScrollIndicator={false}

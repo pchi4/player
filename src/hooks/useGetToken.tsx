@@ -1,19 +1,10 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
-import AuthSession, {
-  ResponseType,
-  useAuthRequest,
-  makeRedirectUri,
-} from "expo-auth-session";
+import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useStateValue } from "@/src/context/State";
-import apiInstance from "../services/api";
-import { Platform } from "react-native";
-import * as Liking from "expo-linking";
 import * as WebBrowser from "expo-web-browser";
 import { router } from "expo-router";
-import React from "react";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -97,7 +88,7 @@ export const useGetToken = () => {
             },
           },
         });
-        router.replace("(auth)/(tabs)");
+        router.replace("/components");
       }
     } catch (error) {
       console.log({ error });
