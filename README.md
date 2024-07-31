@@ -1,50 +1,42 @@
-# Welcome to your Expo app 👋
+# Project Player (Replica autoral do spotify)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Install dependecies: 
 
-## Get started
+  ```
+  yarn install  
+   ```
+### Run this project: 
 
-1. Install dependencies
-
-   ```bash
-   npm install
+ ```
+  npm start 
    ```
 
-2. Start the app
+## Screens: 
 
-   ```bash
-    npx expo start
-   ```
+### Home page:
 
-In the output, you'll find options to open the app in a
+<img width="368" alt="Screenshot 2024-01-24 at 09 39 36" src="https://github.com/pchi4/player/assets/84159325/28e84d0a-95c7-4b92-85ee-7facc9508dc2">
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Album page: 
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+<img width="382" alt="Screenshot 2024-01-24 at 09 42 09" src="https://github.com/pchi4/player/assets/84159325/2827075a-06ce-4527-8960-56560097f1b5">
 
-## Get a fresh project
+### Player page: 
 
-When you're ready, run:
+<img width="362" alt="Screenshot 2024-01-24 at 09 43 20" src="https://github.com/pchi4/player/assets/84159325/100b369c-bde4-4a06-8a23-bb16a1efb02b">
 
-```bash
-npm run reset-project
-```
+### Library page: 
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+<img width="371" alt="Screenshot 2024-01-24 at 09 47 23" src="https://github.com/pchi4/player/assets/84159325/8f50d7a5-2fd6-406e-a584-93a926462482">
 
-## Learn more
+### Playlist page: 
 
-To learn more about developing your project with Expo, look at the following resources:
+<img width="368" alt="Screenshot 2024-01-24 at 09 43 52" src="https://github.com/pchi4/player/assets/84159325/fe9a7ed2-9ec6-4b76-b30b-df6e8345ccc4">
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/learn): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
-## Join the community
 
-Join our community of developers creating universal apps.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+
+
+
