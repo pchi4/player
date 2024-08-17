@@ -14,7 +14,7 @@ const getArtist = async (id: string): Promise<Array<any> | undefined> => {
 
 export const useGetArtist = ({ id }: Parameter) => {
   return useQuery({
-    queryKey: ["getArtist", { id }],
+    queryKey: ["getArtistS", { id }],
     queryFn: async () => await getArtist(id),
     enabled: !!id,
     refetchOnWindowFocus: false,

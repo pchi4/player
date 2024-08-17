@@ -11,10 +11,6 @@ export const useGetNewsReleases = () => {
   return useQuery({
     queryKey: ["getNewsReleases"],
     queryFn: async () => await getNewsReleases(),
-
     refetchOnWindowFocus: false,
-    // onError: (error) => {
-    //   // console.log(error);
-    // },
   });
 };

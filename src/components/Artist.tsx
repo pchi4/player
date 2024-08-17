@@ -9,10 +9,16 @@ import {
 } from "@gluestack-ui/themed-native-base";
 
 import { useStateValue } from "../context/State";
+import { ThemedText } from "./ThemedText";
+
 export const Artist = () => {
   const [context, dispatch] = useStateValue().reducer;
 
-  //   console.log(context);
+  const formatingFollowers = (follower: any) => {
+    var followers = follower?.toFixed(3).split(".");
+    followers[0] = followers[0]?.split(/(?=(?:...)*$)/).join(".");
+    return followers.join(",");
+  };
 
   return (
     <Box
@@ -39,12 +45,12 @@ export const Artist = () => {
         >
           <Box>
             <AspectRatio w="100%" ratio={16 / 12}>
-              {/* <Image
+              <Image
                 source={{
-                  uri: detailsArtist?.images[0].url,
+                  uri: context?.artist?.images[0].url,
                 }}
                 alt="image"
-              /> */}
+              />
             </AspectRatio>
             <Center
               _text={{
@@ -62,20 +68,14 @@ export const Artist = () => {
           </Box>
           <Stack p="4" space={3} maxHeight="40%" bg="gray.600">
             <Stack space={2}>
-              <Heading size="md" ml="-1" color="white">
-                {/* {detailsArtist?.name} */}
-              </Heading>
-              <Text
-                fontSize="xs"
-                color="white"
-                fontWeight="200"
-                ml="-0.5"
-                mt="-1"
-              >
-                {/* {formatingFollowers(detailsArtist?.followers.total) ??
-                  0 + " seguidores"} */}
-              </Text>
+              <ThemedText type="title">{context?.artist?.name}</ThemedText>
+              <ThemedText type="subtitle">
+                {"Seguidores: " +
+                  formatingFollowers(context?.artist?.followers?.total) ??
+                  0 + " seguidores"}
+              </ThemedText>
             </Stack>
+
             <Text fontWeight="200" color="white">
               Bengaluru (also called Bangalore) is the center of India's
               high-tech industry. The city is also known for its parks and

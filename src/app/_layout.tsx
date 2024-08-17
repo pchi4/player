@@ -4,7 +4,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { router, Stack } from "expo-router";
+import { Redirect, router, Slot, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import { NativeBaseProvider } from "@gluestack-ui/themed-native-base";
@@ -17,7 +17,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { useSetupTrackPlayer, useLogTrackPlayerState } from "@/src/hooks";
 import { PlaybackService } from "@/src/services/PlaybackService";
-import { StateProvider } from "@/src/context/State";
+import { StateProvider, useStateValue } from "@/src/context/State";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
@@ -72,9 +72,7 @@ function Navigator() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <SafeAreaProvider>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
+        <Slot />
       </SafeAreaProvider>
     </ThemeProvider>
   );

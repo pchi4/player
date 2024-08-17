@@ -10,21 +10,14 @@ const fetchDetailsArtist = async (
 ): Promise<Array<any> | undefined> => {
   try {
     const result = await apiInstance.get(`/artists/${id}`);
-
     return result.data;
-  } catch (error) {
-    // console.log(error);
-  }
+  } catch (error) {}
 };
 
 export const useGetDetailsArtist = ({ id }: Parameter) => {
   return useQuery({
     queryKey: ["getDetailsArtist", { id }],
     queryFn: async () => await fetchDetailsArtist(id),
-
     refetchOnWindowFocus: false,
-    // onError: (error) => {
-    //   // console.log(error);
-    // },
   });
 };

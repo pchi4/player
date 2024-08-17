@@ -1,25 +1,22 @@
-import { Dimensions, ImageBackground } from "react-native";
-import {
-  useColorModeValue,
-  Button,
-  Box,
-  Center,
-  Container,
-  Heading,
-  Text,
-  Image,
-} from "@gluestack-ui/themed-native-base";
+import { ImageBackground } from "react-native";
+import { Button, Box, Center } from "@gluestack-ui/themed-native-base";
 import { useGetToken } from "@/src/hooks";
-const { width, height } = Dimensions.get("screen");
 import { useEffect } from "react";
-import { ThemedView } from "@/src/components/ThemedView";
 import { ThemedText } from "@/src/components/ThemedText";
 import { router, Stack } from "expo-router";
 import React from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useVerifyToken } from "@/src/hooks";
 
 export default function Auth() {
   const { accessToken } = useGetToken();
+  const { token } = useVerifyToken();
+
+  useEffect(() => {
+    if (token) {
+      console.log({ token });
+      router.replace("/(tabs)/components");
+    }
+  }, [token]);
 
   return (
     <Box style={{ flex: 1 }}>

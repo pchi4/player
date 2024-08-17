@@ -54,26 +54,24 @@ export const useGetToken = () => {
     let codeVerifer = generateCodeVerifier(128);
 
     try {
-      const data = {
-        grant_type: "authorization_code",
-        code,
-        redirect_uri: makeRedirectUri({
-          native: "myapp://",
-          scheme: "myapp",
-          path: "redirect-callback",
-        }),
-        client_id: process.env.EXPO_PUBLIC_API_CLIENT_ID,
-        code_verifier: codeVerifer,
-        client_secret: process.env.EXPO_PUBLIC_API_URL,
-      };
-
       const result = await axios("https://accounts.spotify.com/api/token", {
         method: "POST",
         headers: {
           Accept: "application/json",
           "content-Type": "application/x-www-form-urlencoded",
         },
-        data: new URLSearchParams(data).toString(),
+        data: new URLSearchParams({
+          grant_type: "authorization_code",
+          code,
+          redirect_uri: makeRedirectUri({
+            native: "myapp://",
+            scheme: "myapp",
+            path: "redirect-callback",
+          }),
+          client_id: process.env.EXPO_PUBLIC_API_CLIENT_ID,
+          code_verifier: codeVerifer,
+          client_secret: process.env.EXPO_PUBLIC_API_URL,
+        }).toString(),
       });
 
       if (result.data && result.data.access_token) {
@@ -88,40 +86,18 @@ export const useGetToken = () => {
             },
           },
         });
-        router.replace("/components");
+        router.push("/(auth)/components");
       }
     } catch (error) {
       console.log({ error });
     }
   };
 
-  // console.log(request, response);
-
   const accessToken = async () => {
     try {
       const resultPromptAsync = await promptAsync();
       await AsyncStorage.clear();
-
-      console.log(resultPromptAsync);
-
       await getToken(resultPromptAsync?.params?.code);
-
-      // const resRequestAuth = await requestToken();
-
-      // console.log(resRequestAuth?.data);
-
-      // let resultBrowser = await Liking.openURL(resRequestAuth?.data.url);
-
-      // const result = await apiInstance("http://10.42.0.204:4000/auth/token", {
-      //   method: "GET",
-      //   headers: {
-      //     Accept: "application/json",
-      //     "Content-Type": "application/x-www-form-urlencoded",
-      //   },
-      // });
-
-      // console.log(result.data);
-      // console.log(resultBrowser);
     } catch (error) {
       console.log(error);
     }

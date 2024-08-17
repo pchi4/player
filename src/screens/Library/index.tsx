@@ -5,6 +5,7 @@ import {
   View,
   Dimensions,
   useColorScheme,
+  StatusBar,
 } from "react-native";
 import { Box, Pressable, Avatar } from "@gluestack-ui/themed-native-base";
 
@@ -24,8 +25,8 @@ const HeaderList = () => {
   return (
     <View
       style={{
-        backgroundColor: colorScheme === "dark" ? "black" : "white",
-        paddingTop: 10,
+        backgroundColor: colorScheme === "dark" ? "blue" : "gray",
+        paddingTop: StatusBar.currentHeight,
       }}
     >
       <View
@@ -50,19 +51,11 @@ const HeaderList = () => {
             Sua Biblioteca
           </ThemedText>
         </View>
-        <View style={{ flexDirection: "row", marginHorizontal: 4 }}>
-          <Pressable>
-            <Feather name={"align-justify"} size={25 % 100} color="#FFFFFF" />
-          </Pressable>
-          <Pressable>
-            <Feather name={"align-justify"} size={25 % 100} color="#FFFFFF" />
-          </Pressable>
-        </View>
       </View>
 
       <FlatList
         data={["Playlist", "Podcasts", "Àlbuns", "Artistas", "Baixado"]}
-        keyExtractor={(item) => String(item?.id)}
+        keyExtractor={(item, idx) => String(idx)}
         horizontal
         renderItem={({ item }) => (
           <View
@@ -93,12 +86,12 @@ export default function Library() {
 
   return (
     <SafeAreaView>
-      <Box style={{ paddingTop: 30 }} justifyContent="space-between">
+      <Box justifyContent="space-between">
         <FlatList
           data={data?.items}
           numColumns={3}
           ListHeaderComponent={HeaderList}
-          keyExtractor={(item) => String(item?.id)}
+          keyExtractor={(item, idx) => String(idx)}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ gap: 10 }}
           columnWrapperStyle={{ gap: 10 }}

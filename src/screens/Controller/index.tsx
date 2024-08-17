@@ -17,6 +17,7 @@ import TrackPlayer, {
   usePlaybackState,
 } from "react-native-track-player";
 import { router } from "expo-router";
+import { useGetColorsImage } from "@/src/hooks/useGetColorsImage";
 const { width, height } = Dimensions.get("screen");
 
 export default function Controller() {
@@ -25,6 +26,8 @@ export default function Controller() {
   const track = useActiveTrack();
   const progress = useProgress();
   const status = usePlaybackState();
+
+  const { colors } = useGetColorsImage({ uri: track?.artwork });
 
   return (
     <>
@@ -40,7 +43,10 @@ export default function Controller() {
             rounded="md"
             bottom={Platform.OS === "android" ? height / 80 : height / 46}
             position="absolute"
-            style={{ position: "absolute" }}
+            style={{
+              position: "absolute",
+              backgroundColor: colors?.colorThree.value,
+            }}
           >
             <HStack justifyContent="space-between">
               <Box>

@@ -8,7 +8,6 @@ type Parameter = {
 const fetchSeveralArtist = async (id: string): Promise<any> => {
   try {
     const result = await apiInstance.get(`/artists/${id}/related-artists`);
-
     return result.data;
   } catch (error) {
     // console.log(error);
@@ -21,8 +20,5 @@ export const useGetSeveralArtist = ({ id }: Parameter) => {
     queryFn: async () => await fetchSeveralArtist(id),
 
     refetchOnWindowFocus: false,
-    // onError: (error) => {
-    //   // console.log(error);
-    // },
   });
 };

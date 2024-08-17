@@ -1,29 +1,18 @@
 import React, { useEffect, useState } from "react";
 import {
-  SafeAreaView,
   StatusBar,
-  ScrollView,
-  View,
   LogBox,
-  TouchableOpacity,
-  Linking,
   FlatList,
+  RefreshControl,
+  View,
+  Image,
+  useColorScheme,
 } from "react-native";
-import { HStack, Box, Text, Pressable } from "@gluestack-ui/themed-native-base";
+import { Box } from "@gluestack-ui/themed-native-base";
 import { useStateValue } from "@/src/context/State";
-import * as Liking from "expo-linking";
-
-import {
-  CardAlbum,
-  CardHome,
-  CardNewsReleases,
-  CardPlaylist,
-  CardTopArtist,
-} from "@/src/components/Cards/index";
+import { CardHome } from "@/src/components/Cards/index";
 
 import { Loading } from "@/src/components/Loading";
-import { Error } from "@/src/components/Error";
-
 import {
   useGetProfile,
   useGetAlbums,
@@ -35,10 +24,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, Link } from "expo-router";
 import { ThemedText } from "@/src/components/ThemedText";
 import Controller from "@/src/screens/Controller";
+import { Footer } from "./Footer";
+import { Header } from "@/src/components/Header";
 
 export default function Home() {
   const [_, setNavigator] = useStateValue().navigator;
   const [context, dispatch] = useStateValue().reducer;
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
@@ -50,18 +42,21 @@ export default function Home() {
     data: profile,
     isLoading: profileIsLoading,
     isFetching: profileIsFetching,
+    refetch: onRefetchProfile,
   } = useGetProfile();
 
   const {
     data: newsRealeases,
     isLoading: newReleasesIsLoading,
     isFetching: newReleasesIsFetching,
+    refetch: onRefetchRealeases,
   } = useGetNewsReleases();
 
   const {
     data: playlist,
     isLoading: playlistLoading,
     isFetching: playlistFetching,
+    refetch: onRefetchPlaylist,
   } = useGetPlaytlist();
 
   const setProfileStore = async () => {
@@ -76,85 +71,15 @@ export default function Home() {
     setProfileStore();
   }, [profile]);
 
-  if (isError) {
-    return <Error />;
+  function onRefetch() {
+    onRefetchPlaylist();
+    onRefetchRealeases();
+    onRefetchProfile();
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
   }
-
-  const headerComponent = () => {
-    return <></>;
-  };
-
-  const footerComponent = () => {
-    return (
-      <>
-        <Box paddingTop="6" paddingBottom="6">
-          <ThemedText type="title">
-            Feito para {profile?.display_name}
-          </ThemedText>
-        </Box>
-        <FlatList
-          data={data?.items.filter((_, idx) => {
-            return idx > 7;
-          })}
-          horizontal
-          keyExtractor={(item, idx) => String(idx)}
-          renderItem={({ item }) => (
-            <CardAlbum width={250} height={250} items={item} />
-          )}
-        />
-
-        <Box paddingTop="6" paddingBottom="6">
-          <ThemedText type="title">Suas playlists</ThemedText>
-        </Box>
-
-        <FlatList
-          data={playlist?.items}
-          keyExtractor={(item, idx) => String(idx)}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          renderItem={({ item }) => (
-            <CardPlaylist
-              Width={250}
-              Height={250}
-              items={item}
-              navigation={router}
-              handleClick={() => {
-                dispatch({
-                  type: "setPlaylist",
-                  payload: {
-                    playlist: item,
-                  },
-                });
-                router.push("/playlist/[details]");
-              }}
-            />
-          )}
-        />
-
-        <Box paddingTop="6" paddingBottom="6">
-          <ThemedText type="title">Novidades na área</ThemedText>
-        </Box>
-
-        <FlatList
-          data={newsRealeases?.albums?.items}
-          keyExtractor={(_item, idx) => String(idx)}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          renderItem={({ item }) => (
-            <CardNewsReleases
-              width={250}
-              height={250}
-              items={item}
-              navigation={router}
-              // handleClick={() => router.navigate("albums", item)}
-            />
-          )}
-        />
-      </>
-    );
-  };
 
   if (
     isLoading ||
@@ -170,25 +95,43 @@ export default function Home() {
   }
 
   return (
-    <Box padding="4">
+    <View style={{ paddingBottom: "25%" }}>
+      <Header imageProfile={profile?.images[0].url} />
+
       <FlatList
-        style={{ paddingTop: StatusBar.currentHeight }}
-        data={data?.items.filter((_, idx) => {
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefetch}
+            tintColor="blue"
+          />
+        }
+        style={{ paddingHorizontal: 10 }}
+        data={data?.items?.filter((_, idx) => {
           return idx <= 7;
         })}
         numColumns={2}
-        keyExtractor={(item, idx) => String(item.album.id + idx)}
+        keyExtractor={(item, idx) => String(idx)}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         ListHeaderComponent={
-          <Box paddingTop="10" paddingBottom="6">
+          <Box paddingTop="4" paddingBottom="6">
             <ThemedText type="title">Tocados recentes</ThemedText>
           </Box>
         }
-        renderItem={({ item }) => <CardHome items={item} navigation={router} />}
-        ListFooterComponent={footerComponent}
+        renderItem={({ item, idx }) => (
+          <CardHome key={idx} items={item} navigation={router} />
+        )}
+        ListFooterComponent={
+          <Footer
+            profile={profile?.display_name}
+            recents={data?.items}
+            playlists={playlist?.items}
+            newRealeases={newsRealeases?.albums?.items}
+          />
+        }
       />
       <Controller />
-    </Box>
+    </View>
   );
 }
