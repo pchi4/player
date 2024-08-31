@@ -18,6 +18,7 @@ import TrackPlayer, {
 } from "react-native-track-player";
 import { router } from "expo-router";
 import { useGetColorsImage } from "@/src/hooks/useGetColorsImage";
+import { ThemedText } from "@/src/components/ThemedText";
 const { width, height } = Dimensions.get("screen");
 
 export default function Controller() {
@@ -32,7 +33,10 @@ export default function Controller() {
   return (
     <>
       {track && (
-        <TouchableOpacity onPress={() => router.push("/play/[details]")}>
+        <TouchableOpacity
+          style={{ marginHorizontal: 8 }}
+          onPress={() => router.push("/play/[details]")}
+        >
           <Box
             width="100%"
             bg="#5C5E60"
@@ -53,8 +57,8 @@ export default function Controller() {
                 <HStack justifyContent="start">
                   <Image
                     borderRadius={6}
-                    width={width / 9}
-                    height={width / 9}
+                    width={width / 8}
+                    height={width / 8}
                     source={{
                       uri:
                         track.artwork ??
@@ -66,26 +70,21 @@ export default function Controller() {
                     alt="album art work"
                   />
                   <VStack>
-                    <Text
-                      pl={2}
-                      color="white"
-                      fontWeight="bold"
-                      fontSize="md"
-                      isTruncated
-                      maxWidth={200}
+                    <ThemedText
+                      type="subtitle"
+                      style={{ maxWidth: 200, marginLeft: 10, color: "white" }}
+                      numberOfLines={1}
                     >
                       {track.title}
-                    </Text>
+                    </ThemedText>
 
-                    <Text
-                      pl={2}
-                      color="white"
-                      fontSize="xs"
-                      isTruncated
-                      maxWidth={200}
+                    <ThemedText
+                      type="default"
+                      style={{ maxWidth: 200, marginLeft: 10, color: "white" }}
+                      numberOfLines={1}
                     >
                       {track.artist}
-                    </Text>
+                    </ThemedText>
                   </VStack>
                 </HStack>
               </Box>
@@ -96,14 +95,13 @@ export default function Controller() {
                   alignContent="center"
                   pt={3}
                 >
-                  <Feather name="speaker" size={24 % 100} color="#FFFFFF" />
                   {status.state === "playing" ? (
                     <TouchableOpacity onPress={() => TrackPlayer.pause()}>
-                      <Feather name="pause" size={24 % 100} color="#FFFFFF" />
+                      <Feather name="pause" size={28 % 100} color="#FFFFFF" />
                     </TouchableOpacity>
                   ) : (
                     <TouchableOpacity onPress={() => TrackPlayer.play()}>
-                      <Feather name="play" size={24 % 100} color="#FFFFFF" />
+                      <Feather name="play" size={28 % 100} color="#FFFFFF" />
                     </TouchableOpacity>
                   )}
                 </HStack>

@@ -18,39 +18,47 @@ import { Feather } from "@expo/vector-icons";
 
 import { router } from "expo-router";
 import { ThemedText } from "@/src/components/ThemedText";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const HeaderList = () => {
   const colorScheme = useColorScheme();
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        await AsyncStorage.getItem("profile");
+      } catch (error) {}
+    };
+
+    fetchProfile();
+  });
 
   return (
     <View
       style={{
         backgroundColor: colorScheme === "dark" ? "blue" : "gray",
-        paddingTop: StatusBar.currentHeight,
+        paddingTop: "15%",
       }}
     >
       <View
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
           flexDirection: "row",
+          alignContent: "center",
         }}
       >
-        <View style={{ flexDirection: "row" }}>
-          <Avatar
-            marginLeft="2"
-            bg="green.500"
-            size="sm"
-            source={{
-              uri: "https://i.scdn.co/image/ab67616d0000b2732c5b24ecfa39523a75c993c4",
-            }}
-          ></Avatar>
-
-          <ThemedText style={{ marginLeft: 4 }} type="subtitle">
-            Sua Biblioteca
-          </ThemedText>
-        </View>
+        <Avatar
+          marginLeft="2"
+          bg="green.500"
+          size="md"
+          source={{
+            uri: "https://i.scdn.co/image/ab67616d0000b2732c5b24ecfa39523a75c993c4",
+          }}
+        ></Avatar>
+        <ThemedText style={{ marginLeft: 4 }} type="subtitle">
+          Sua Biblioteca
+        </ThemedText>
       </View>
 
       <FlatList
@@ -85,29 +93,27 @@ export default function Library() {
   }
 
   return (
-    <SafeAreaView>
-      <Box justifyContent="space-between">
-        <FlatList
-          data={data?.items}
-          numColumns={3}
-          ListHeaderComponent={HeaderList}
-          keyExtractor={(item, idx) => String(idx)}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ gap: 10 }}
-          columnWrapperStyle={{ gap: 10 }}
-          stickyHeaderIndices={[0]}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <CardLibrary
-              items={item}
-              navigation={router}
-              handleClick={() => router.navigate("playlists")}
-              Width={null}
-              Height={null}
-            />
-          )}
-        />
-      </Box>
-    </SafeAreaView>
+    <Box justifyContent="space-between">
+      <FlatList
+        data={data?.items}
+        numColumns={3}
+        ListHeaderComponent={HeaderList}
+        keyExtractor={(item, idx) => String(idx)}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ gap: 10 }}
+        columnWrapperStyle={{ gap: 10 }}
+        stickyHeaderIndices={[0]}
+        showsHorizontalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <CardLibrary
+            items={item}
+            navigation={router}
+            handleClick={() => router.navigate("playlists")}
+            Width={null}
+            Height={null}
+          />
+        )}
+      />
+    </Box>
   );
 }

@@ -1,13 +1,4 @@
 import React from "react";
-import {
-  Image,
-  Center,
-  Box,
-  Text,
-  Avatar,
-  HStack,
-  Flex,
-} from "@gluestack-ui/themed-native-base";
 
 import {
   SafeAreaView,
@@ -16,12 +7,14 @@ import {
   Dimensions,
   RefreshControl,
   ImageBackground,
+  useColorScheme,
   View,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { ThemedText } from "@/src/components/ThemedText";
 import TrackPlayer, { usePlaybackState } from "react-native-track-player";
+import { Flex } from "@gluestack-ui/themed-native-base";
 const { width } = Dimensions.get("screen");
 
 interface PropsHeader {
@@ -44,6 +37,7 @@ export function Header({
   staterdAllTracks,
 }: PropsHeader): React.JSX.Element {
   const playerState = usePlaybackState();
+  const colorScheme = useColorScheme();
 
   return (
     <SafeAreaView>
@@ -64,19 +58,43 @@ export function Header({
         >
           <Feather name={"arrow-left"} size={40 % 100} color="#FFFFFF" />
         </TouchableOpacity>
-        <View style={{ top: width / 1.2, left: width / 1.2 }}>
+        <View
+          style={{
+            position: "absolute",
+            top: width / 1.1,
+            left: width / 1.3,
+            backgroundColor: "blue",
+            borderRadius: 50,
+            padding: 10,
+            justifyContent: "center",
+            alignContent: "center",
+            alignItems: "center",
+          }}
+        >
           {playerState.state == "paused" ? (
             <TouchableOpacity onPress={staterdAllTracks}>
-              <Feather name={"play"} size={50 % 100} color="#FFFFFF" />
+              <Feather
+                name={"play"}
+                size={50 % 100}
+                color={colorScheme === "dark" ? "white" : "black"}
+              />
             </TouchableOpacity>
           ) : (
             <TouchableOpacity onPress={async () => await TrackPlayer.pause()}>
-              <Feather name={"pause"} size={50 % 100} color="#FFFFFF" />
+              <Feather
+                name={"pause"}
+                size={50 % 100}
+                color={colorScheme === "dark" ? "white" : "black"}
+              />
             </TouchableOpacity>
           )}
         </View>
       </ImageBackground>
-      <ThemedText type="title" style={{ padding: 10, paddingTop: 30 }}>
+      <ThemedText
+        numberOfLines={2}
+        type="title"
+        style={{ padding: 10, paddingTop: 40 }}
+      >
         {albumName}
       </ThemedText>
       <ThemedText

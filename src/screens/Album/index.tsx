@@ -6,21 +6,21 @@ import {
   LogBox,
   RefreshControl,
   StatusBar,
+  Text,
+  useColorScheme,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import {
-  Box,
-  Text,
-  HStack,
-  VStack,
-  Spacer,
-} from "@gluestack-ui/themed-native-base";
+import { Box, HStack, VStack, Spacer } from "@gluestack-ui/themed-native-base";
 
 import { useGetArtist, useGetSeveralArtist } from "./hooks";
 import { LinearGradient } from "expo-linear-gradient";
 import { Loading } from "@/src/components/Loading";
 import { useStateValue } from "@/src/context/State";
-import TrackPlayer, { usePlaybackState } from "react-native-track-player";
+import TrackPlayer, {
+  usePlaybackState,
+  useActiveTrack,
+  usePlayWhenReady,
+} from "react-native-track-player";
 
 import Controller from "@/src/screens/Controller";
 import { Header } from "./Header";
@@ -45,10 +45,9 @@ export default function Album() {
   const playerState = usePlaybackState();
   const [refreshing, setRefreshing] = useState(false);
   const { colors } = useGetColorsImage({ uri: album.images[0].url });
+  const colorScheme = useColorScheme();
 
-  useEffect(() => {
-    LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
-  }, []);
+  const activeTrack = useActiveTrack();
 
   const {
     data: artists,
@@ -156,84 +155,131 @@ export default function Album() {
   }
 
   return (
-    <>
-      <Box style={{ backgroundColor: colors?.colorThree.value }}>
-        <FlatList
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              tintColor="blue"
-            />
-          }
-          data={album.tracks.items}
-          keyExtractor={(item) => String(item.id)}
-          ListHeaderComponent={
-            <Header
-              uriImageAlbum={album?.images[0].url}
-              albumName={album?.name}
-              uriImageArtist={artists?.images[0].url}
-              nameArtist={album?.artists[0].name}
-              typeAlbum={album?.type}
-              realeaseDate={album?.release_date}
-              staterdAllTracks={staterdAllTracks}
-            />
-          }
-          nestedScrollEnabled={true}
-          renderItem={({ item, index }) => {
-            const isBackGround = index === album.tracks.items[index];
-            return (
-              <Box
-                _dark={{
-                  borderColor: "muted.50",
-                }}
-                borderColor="muted.800"
-                py="2"
-                style={{
-                  margin: 4,
-                  paddingHorizontal: 8,
-                }}
-              >
-                <TouchableOpacity onPress={() => handlePLayTrack(index, item)}>
-                  <HStack space={[2, 3]} justifyContent="space-between">
-                    <VStack>
-                      <ThemedText type="subtitle" numberOfLines={1}>
-                        {item.name}
-                      </ThemedText>
-                      <ThemedText type="default" numberOfLines={1}>
-                        {album?.artists[0].name}
-                      </ThemedText>
-                    </VStack>
-                    <Spacer />
+    <View
+      style={{
+        paddingTop: "15%",
+        height: 150,
+        flex: 1,
+        backgroundColor: colorScheme === "dark" ? "#212224" : "white",
+      }}
+    >
+      <LinearGradient
+        colors={
+          colorScheme === "dark"
+            ? [colors.colorThree.value, "#212224", "#212224"]
+            : [colors.colorThree.value, "white", "white"]
+        }
+      >
+        <SafeAreaView>
+          <FlatList
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                tintColor="blue"
+              />
+            }
+            data={album.tracks.items}
+            keyExtractor={(item) => String(item.id)}
+            ListHeaderComponent={
+              <Header
+                uriImageAlbum={album?.images[0].url}
+                albumName={album?.name}
+                uriImageArtist={artists?.images[0].url}
+                nameArtist={album?.artists[0].name}
+                typeAlbum={album?.type}
+                realeaseDate={album?.release_date}
+                staterdAllTracks={staterdAllTracks}
+              />
+            }
+            renderItem={({ item, index }) => {
+              return (
+                <Box
+                  _dark={{
+                    borderColor: "muted.50",
+                  }}
+                  borderColor="muted.800"
+                  py="2"
+                  style={{
+                    marginBottom: 8,
+                    paddingHorizontal: 8,
+                    backgroundColor:
+                      activeTrack?.index === index
+                        ? "#f0f8"
+                        : colorScheme === "dark"
+                        ? "#2b3c43"
+                        : "#f1f1f1",
+                    padding: 8,
+                    borderRadius: 8,
+                    marginHorizontal: 8,
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => handlePLayTrack(index, item)}
+                  >
+                    <HStack space={[2, 3]} justifyContent="space-between">
+                      <View
+                        style={{
+                          width: 50,
+                          backgroundColor:
+                            activeTrack?.index === index
+                              ? "pink"
+                              : colorScheme === "dark"
+                              ? "gray"
+                              : "gray",
+                          alignItems: "center",
+                          alignContent: "center",
+                          justifyContent: "center",
+                          borderRadius: 50,
+                        }}
+                      >
+                        <ThemedText type="defaultSemiBold" numberOfLines={1}>
+                          {item.name[0]}
+                        </ThemedText>
+                      </View>
+                      <VStack>
+                        <ThemedText
+                          type="subtitle"
+                          numberOfLines={1}
+                          style={{ width: 230 }}
+                        >
+                          {item.name}
+                        </ThemedText>
+                        <ThemedText type="default" numberOfLines={1}>
+                          {album?.artists[0].name}
+                        </ThemedText>
+                      </VStack>
+                      <Spacer />
 
-                    <ThemedText
-                      type="default"
-                      numberOfLines={1}
-                      style={{
-                        alignItems: "center",
-                        alignSelf: "flex-start",
-                      }}
-                    >
-                      {formatTime(item.duration_ms)}
-                    </ThemedText>
-                  </HStack>
-                </TouchableOpacity>
-              </Box>
-            );
-          }}
-          ListFooterComponent={
-            <Footer
-              realeaseDate={album?.release_date}
-              totalTracks={album?.total_tracks}
-              uriImageArtist={artists.images[0].url}
-              nameArtist={album?.artists[0].name}
-              releaseArtist={releatedArtist?.artists}
-              copyrights={album?.copyrights}
-            />
-          }
-        />
-      </Box>
-      <Controller />
-    </>
+                      <ThemedText
+                        type="default"
+                        numberOfLines={1}
+                        style={{
+                          alignItems: "center",
+                          alignSelf: "flex-start",
+                        }}
+                      >
+                        {formatTime(item.duration_ms)}
+                      </ThemedText>
+                    </HStack>
+                  </TouchableOpacity>
+                </Box>
+              );
+            }}
+            ListFooterComponent={
+              <Footer
+                realeaseDate={album?.release_date}
+                totalTracks={album?.total_tracks}
+                uriImageArtist={artists.images[0].url}
+                nameArtist={album?.artists[0].name}
+                releaseArtist={releatedArtist?.artists}
+                copyrights={album?.copyrights}
+              />
+            }
+          />
+          <Controller />
+        </SafeAreaView>
+      </LinearGradient>
+    </View>
   );
 }

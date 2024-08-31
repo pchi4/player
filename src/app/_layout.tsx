@@ -9,8 +9,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import { NativeBaseProvider } from "@gluestack-ui/themed-native-base";
 
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { StatusBar } from "react-native";
+import { StatusBar, View, useColorScheme } from "react-native";
 import React from "react";
 import TrackPlayer from "react-native-track-player";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -35,6 +34,7 @@ export default function RootLayout() {
   });
 
   const queryClient = new QueryClient();
+  const colorScheme = useColorScheme();
 
   useLogTrackPlayerState();
 
@@ -43,8 +43,16 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <NativeBaseProvider>
           <GestureHandlerRootView>
+            <View>
+              <StatusBar
+                animated={true}
+                translucent
+                barStyle={
+                  colorScheme === "light" ? "dark-content" : "light-content"
+                }
+              />
+            </View>
             <Navigator />
-            <StatusBar barStyle="default" />
           </GestureHandlerRootView>
         </NativeBaseProvider>
       </QueryClientProvider>

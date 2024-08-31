@@ -14,6 +14,7 @@ import {
   ImageBackground,
   StatusBar,
   View,
+  useColorScheme,
 } from "react-native";
 
 import { useStateValue } from "@/src/context/State";
@@ -50,6 +51,7 @@ export default function Play() {
   const status = usePlaybackState();
 
   const { colors, loading } = useImageColors();
+  const colorScheme = useColorScheme();
 
   const album = context?.album.album;
 
@@ -86,40 +88,41 @@ export default function Play() {
   }
 
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
-      heigth={height / 2}
-      headerImage={
-        <>
-          <ImageBackground
-            source={{
-              uri: track?.artwork,
-            }}
-            alt="ArtWork albuns"
-            style={{ width: width, height: height / 2 }}
-          >
-            <TouchableOpacity
-              style={{ top: "10%", paddingHorizontal: 10 }}
-              onPress={() => router.back()}
+    <SafeAreaView style={{ flex: 1 }}>
+      <ParallaxScrollView
+        headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
+        heigth={height / 2}
+        headerImage={
+          <>
+            <ImageBackground
+              source={{
+                uri: track?.artwork,
+              }}
+              alt="ArtWork albuns"
+              style={{ width: width, height: height / 2 }}
             >
-              <Feather name={"arrow-left"} size={40 % 100} color="#FFFFFF" />
-            </TouchableOpacity>
-          </ImageBackground>
-        </>
-      }
-    >
-      <LinearGradient
-        colors={
-          colors
-            ? [colors?.colorTwo.value, colors?.colorThree.value]
-            : [colors?.background]
+              <TouchableOpacity
+                style={{ top: "10%", paddingHorizontal: 10 }}
+                onPress={() => router.back()}
+              >
+                <Feather name={"arrow-left"} size={40 % 100} color="gray" />
+              </TouchableOpacity>
+            </ImageBackground>
+          </>
         }
       >
-        <SafeAreaView>
+        <LinearGradient
+          colors={
+            colorScheme === "dark"
+              ? ["#212224", colors.colorThree.value, "#212224"]
+              : ["white", colors.colorThree.value, "white"]
+          }
+        >
           <View style={{ paddingHorizontal: 10 }}>
-            <View style={{ paddingVertical: 10 }}>
+            <View>
               <ThemedText
                 type="title"
+                numberOfLines={1}
                 style={{ paddingVertical: 4, width: width / 1.3 }}
               >
                 {track?.title}
@@ -136,21 +139,22 @@ export default function Play() {
               style={{ width: width, margin: 0, padding: 0, right: 10 }}
               value={formatedValueSlider(Number(position))}
               maximumValue={verifyNumberMaxSlider(Number(duration))}
-              minimumTrackTintColor="#FFFFFF"
-              maximumTrackTintColor="#FFFFFF"
+              minimumTrackTintColor={"blue"}
+              maximumTrackTintColor={"blue"}
+
               // onValueChange={(value) => onChangeSlider(value)}
             />
 
             <HStack space={8} justifyContent="space-between" marginBottom="5%">
               <Text
-                color="#FFFFFF"
+                color={colorScheme === "dark" ? "white" : "black"}
                 fontWeight="bold"
                 fontSize={["md", "md", "lg"]}
               >
                 {formatSecondsToMinutes(position)}
               </Text>
               <Text
-                color="#FFFFFF"
+                color={colorScheme === "dark" ? "white" : "black"}
                 fontWeight="bold"
                 fontSize={["md", "md", "lg"]}
               >
@@ -176,26 +180,46 @@ export default function Play() {
                   </TouchableOpacity>
                 ) : (
                   <TouchableOpacity onPress={() => setIsRandom(!isRandom)}>
-                    <Feather name="shuffle" size={20 % 100} color="#FFFFFF" />
+                    <Feather
+                      name="shuffle"
+                      size={20 % 100}
+                      color={colorScheme === "dark" ? "white" : "black"}
+                    />
                   </TouchableOpacity>
                 )}
               </Box>
               <TouchableOpacity onPress={() => TrackPlayer.skipToPrevious()}>
-                <Feather name="skip-back" size={40 % 100} color="#FFFFFF" />
+                <Feather
+                  name="skip-back"
+                  size={40 % 100}
+                  color={colorScheme === "dark" ? "white" : "black"}
+                />
               </TouchableOpacity>
 
               {status.state === "playing" ? (
                 <TouchableOpacity onPress={() => TrackPlayer.pause()}>
-                  <Feather name="pause" size={60 % 100} color="#FFFFFF" />
+                  <Feather
+                    name="pause"
+                    size={60 % 100}
+                    color={colorScheme === "dark" ? "white" : "black"}
+                  />
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity onPress={() => TrackPlayer.play()}>
-                  <Feather name="play" size={60 % 100} color="#FFFFFF" />
+                  <Feather
+                    name="play"
+                    size={60 % 100}
+                    color={colorScheme === "dark" ? "white" : "black"}
+                  />
                 </TouchableOpacity>
               )}
 
               <TouchableOpacity onPress={() => TrackPlayer.skipToNext()}>
-                <Feather name="skip-forward" size={40 % 100} color="#FFFFFF" />
+                <Feather
+                  name="skip-forward"
+                  size={40 % 100}
+                  color={colorScheme === "dark" ? "white" : "black"}
+                />
               </TouchableOpacity>
               {isReapeat ? (
                 <TouchableOpacity onPress={() => setIsRepeat(!isReapeat)}>
@@ -208,7 +232,11 @@ export default function Play() {
                     await TrackPlayer.setRepeatMode(RepeatMode.Queue);
                   }}
                 >
-                  <Feather name="repeat" size={20 % 100} color="#FFFFFF" />
+                  <Feather
+                    name="repeat"
+                    size={20 % 100}
+                    color={colorScheme === "dark" ? "white" : "black"}
+                  />
                 </TouchableOpacity>
               )}
             </HStack>
@@ -217,8 +245,8 @@ export default function Play() {
           <TouchableOpacity onPress={() => router.push("/artist/[details]")}>
             <Artist />
           </TouchableOpacity>
-        </SafeAreaView>
-      </LinearGradient>
-    </ParallaxScrollView>
+        </LinearGradient>
+      </ParallaxScrollView>
+    </SafeAreaView>
   );
 }

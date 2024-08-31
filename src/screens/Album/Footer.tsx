@@ -4,6 +4,7 @@ import { StatusBar, View, FlatList } from "react-native";
 import { format } from "date-fns";
 import { eoLocale } from "date-fns/locale/eo";
 import { CardArtist } from "@/src/components/Cards/Artist";
+import { ThemedText } from "@/src/components/ThemedText";
 
 interface PropsFooter {
   uriImageArtist: string;
@@ -24,18 +25,19 @@ export function Footer({
 }: PropsFooter): React.JSX.Element {
   return (
     <View style={{ paddingHorizontal: 10 }}>
-      <Box style={{ paddingVertical: 8 }}>
-        <Text color="white" fontSize="md" fontWeight="bold">
+      <Box style={{ paddingVertical: 20 }}>
+        <ThemedText type="subtitle" numberOfLines={1}>
           {format(new Date(realeaseDate), "do 'de' MMMM yyyy", {
             locale: eoLocale,
-          })}
-        </Text>
-        <Text color="white" fontSize="md" fontWeight="bold">
+          })}{" "}
+        </ThemedText>
+
+        <ThemedText type="subtitle" numberOfLines={1}>
           {totalTracks + " músicas"}
-        </Text>
+        </ThemedText>
       </Box>
 
-      <Box style={{ paddingVertical: 4 }}>
+      <Box style={{ paddingVertical: 20 }}>
         <HStack justifyContent="start" paddingY="4">
           <Avatar
             bg="green.500"
@@ -44,16 +46,21 @@ export function Footer({
               uri: uriImageArtist,
             }}
           ></Avatar>
-          <Text fontSize="lg" marginLeft="2" fontWeight="bold" color="white">
+
+          <ThemedText
+            style={{ alignItems: "center", alignSelf: "center" }}
+            type="subtitle"
+            numberOfLines={1}
+          >
             {nameArtist}
-          </Text>
+          </ThemedText>
         </HStack>
       </Box>
 
       <Box style={{ paddingVertical: 4 }}>
-        <Text fontSize="lg" fontWeight="bold" color="white">
+        <ThemedText type="subtitle" numberOfLines={1}>
           Mais que talvez você goste
-        </Text>
+        </ThemedText>
 
         <FlatList
           style={{ paddingTop: StatusBar.currentHeight }}
@@ -80,9 +87,9 @@ export function Footer({
 
         <Box paddingTop="4">
           {copyrights.map((value, idx: React.Key | null | undefined) => (
-            <Text fontSize="md" fontWeight="bold" key={idx} color="white">
-              {value.text}
-            </Text>
+            <ThemedText type="default" key={idx} numberOfLines={1}>
+              {value?.text}
+            </ThemedText>
           ))}
         </Box>
       </Box>

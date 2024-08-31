@@ -24,6 +24,8 @@ export function Header({ imageProfile }: PropsHeader): React.JSX.Element {
         flexDirection: "row",
         justifyContent: "space-between",
         backgroundColor: colorScheme === "dark" ? "blue" : "gray",
+        // borderBottomLeftRadius: 25,
+        // borderBottomRightRadius: 25,
       }}
     >
       <ThemedText type="subtitle" style={{ paddingVertical: 8 }}>

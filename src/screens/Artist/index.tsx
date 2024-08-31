@@ -61,10 +61,12 @@ export default function Artist() {
           </>
         }
       >
-        <ThemedText type="title">{context.artist.name}</ThemedText>
-        <ThemedText>All about the artist</ThemedText>
+        <View style={{ paddingHorizontal: 10, paddingTop: 20 }}>
+          <ThemedText type="title">{context.artist.name}</ThemedText>
+          <ThemedText>All about the artist</ThemedText>
+        </View>
 
-        <Box style={{ flex: 1 }}>
+        <Box style={{ flex: 1, padding: 10 }}>
           <View style={{ paddingVertical: 10 }}>
             <ThemedText type="title">
               {formatingFollowers(context.artist.followers.total)}
