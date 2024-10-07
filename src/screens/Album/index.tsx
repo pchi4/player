@@ -8,6 +8,7 @@ import {
   StatusBar,
   Text,
   useColorScheme,
+  Dimensions,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { Box, HStack, VStack, Spacer } from "@gluestack-ui/themed-native-base";
@@ -28,6 +29,7 @@ import { Footer } from "./Footer";
 import { useImageColors } from "@/src/hooks";
 import { useGetColorsImage } from "@/src/hooks/useGetColorsImage";
 import { ThemedText } from "@/src/components/ThemedText";
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
 interface Track {
   _track_number: any;
@@ -46,8 +48,11 @@ export default function Album() {
   const [refreshing, setRefreshing] = useState(false);
   const { colors } = useGetColorsImage({ uri: album.images[0].url });
   const colorScheme = useColorScheme();
+  const [freq, setFrequencies] = useState();
 
   const activeTrack = useActiveTrack();
+
+  console.log(freq);
 
   const {
     data: artists,
@@ -181,6 +186,7 @@ export default function Album() {
             }
             data={album.tracks.items}
             keyExtractor={(item) => String(item.id)}
+            // stickyHeaderIndices={[0]}
             ListHeaderComponent={
               <Header
                 uriImageAlbum={album?.images[0].url}
@@ -204,7 +210,8 @@ export default function Album() {
                     marginBottom: 8,
                     paddingHorizontal: 8,
                     backgroundColor:
-                      activeTrack?.index === index
+                      activeTrack?.index === index &&
+                      album.name === activeTrack.album
                         ? "#f0f8"
                         : colorScheme === "dark"
                         ? "#2b3c43"
@@ -221,8 +228,10 @@ export default function Album() {
                       <View
                         style={{
                           width: 50,
+                          height: 50,
                           backgroundColor:
-                            activeTrack?.index === index
+                            activeTrack?.index === index &&
+                            album.name === activeTrack.album
                               ? "pink"
                               : colorScheme === "dark"
                               ? "gray"
@@ -230,7 +239,7 @@ export default function Album() {
                           alignItems: "center",
                           alignContent: "center",
                           justifyContent: "center",
-                          borderRadius: 50,
+                          borderRadius: 1000,
                         }}
                       >
                         <ThemedText type="defaultSemiBold" numberOfLines={1}>

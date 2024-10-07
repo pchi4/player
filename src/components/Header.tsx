@@ -18,12 +18,14 @@ export function Header({ imageProfile }: PropsHeader): React.JSX.Element {
   return (
     <View
       style={{
-        paddingTop: "15%",
-        height: 110,
+        // paddingTop: "15%",
+        height: 90,
         paddingHorizontal: 10,
+        paddingBottom: 10,
         flexDirection: "row",
         justifyContent: "space-between",
         backgroundColor: colorScheme === "dark" ? "blue" : "gray",
+        alignItems: "flex-end",
         // borderBottomLeftRadius: 25,
         // borderBottomRightRadius: 25,
       }}

@@ -4,6 +4,7 @@ import { useActiveTrack } from "react-native-track-player";
 
 export const useGetColorsImage = ({ uri }) => {
   const [loading, setLoading] = useState(true);
+  
   const [colors, setColors] = React.useState<object | null>({
     colorOne: { value: "", name: "" },
     colorTwo: { value: "", name: "" },

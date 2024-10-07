@@ -6,7 +6,12 @@ import {
   VStack,
   Progress,
 } from "@gluestack-ui/themed-native-base";
-import { Dimensions, TouchableOpacity, Platform } from "react-native";
+import {
+  Dimensions,
+  TouchableOpacity,
+  Platform,
+  useColorScheme,
+} from "react-native";
 import { Feather } from "@expo/vector-icons";
 import * as Device from "expo-device";
 
@@ -20,6 +25,7 @@ import { router } from "expo-router";
 import { useGetColorsImage } from "@/src/hooks/useGetColorsImage";
 import { ThemedText } from "@/src/components/ThemedText";
 const { width, height } = Dimensions.get("screen");
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
 export default function Controller() {
   var deviceModel = Device.deviceName;
@@ -27,6 +33,7 @@ export default function Controller() {
   const track = useActiveTrack();
   const progress = useProgress();
   const status = usePlaybackState();
+  const colorScheme = useColorScheme();
 
   const { colors } = useGetColorsImage({ uri: track?.artwork });
 
@@ -49,7 +56,7 @@ export default function Controller() {
             position="absolute"
             style={{
               position: "absolute",
-              backgroundColor: colors?.colorThree.value,
+              backgroundColor: colorScheme === "dark" ? "#5C5E60" : "#ffffff",
             }}
           >
             <HStack justifyContent="space-between">
@@ -57,8 +64,8 @@ export default function Controller() {
                 <HStack justifyContent="start">
                   <Image
                     borderRadius={6}
-                    width={width / 8}
-                    height={width / 8}
+                    width={scale(34)}
+                    height={scale(34)}
                     source={{
                       uri:
                         track.artwork ??
@@ -69,10 +76,15 @@ export default function Controller() {
                     }}
                     alt="album art work"
                   />
-                  <VStack>
+                  <VStack style={{ alignSelf: "flex-end" }}>
                     <ThemedText
                       type="subtitle"
-                      style={{ maxWidth: 200, marginLeft: 10, color: "white" }}
+                      style={{
+                        maxWidth: 200,
+                        marginLeft: 10,
+                        color: "white",
+                        fontSize: scale(14),
+                      }}
                       numberOfLines={1}
                     >
                       {track.title}
@@ -80,7 +92,12 @@ export default function Controller() {
 
                     <ThemedText
                       type="default"
-                      style={{ maxWidth: 200, marginLeft: 10, color: "white" }}
+                      style={{
+                        maxWidth: 200,
+                        marginLeft: 10,
+                        color: "white",
+                        fontSize: scale(10),
+                      }}
                       numberOfLines={1}
                     >
                       {track.artist}
@@ -88,20 +105,15 @@ export default function Controller() {
                   </VStack>
                 </HStack>
               </Box>
-              <Box>
-                <HStack
-                  alignItems="center"
-                  space={2}
-                  alignContent="center"
-                  pt={3}
-                >
+              <Box style={{ alignSelf: "center" }}>
+                <HStack space={2}>
                   {status.state === "playing" ? (
                     <TouchableOpacity onPress={() => TrackPlayer.pause()}>
-                      <Feather name="pause" size={28 % 100} color="#FFFFFF" />
+                      <Feather name="pause" size={scale(25)} color="#FFFFFF" />
                     </TouchableOpacity>
                   ) : (
                     <TouchableOpacity onPress={() => TrackPlayer.play()}>
-                      <Feather name="play" size={28 % 100} color="#FFFFFF" />
+                      <Feather name="play" size={scale(25)} color="#FFFFFF" />
                     </TouchableOpacity>
                   )}
                 </HStack>
@@ -110,7 +122,6 @@ export default function Controller() {
             <Progress
               mt={2}
               style={{ marginHorizontal: 0 }}
-              //   width="100%"
               mx={progress.duration / 1000}
               value={
                 Math.floor((progress.position / progress.duration) * 100) ?? 0

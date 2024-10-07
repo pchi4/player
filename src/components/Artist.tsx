@@ -9,10 +9,12 @@ import {
 } from "@gluestack-ui/themed-native-base";
 
 import { useStateValue } from "../context/State";
+import { useColorScheme } from "react-native";
 import { ThemedText } from "./ThemedText";
 
 export const Artist = () => {
   const [context, dispatch] = useStateValue().reducer;
+  const colorScheme = useColorScheme();
 
   const formatingFollowers = (follower: any) => {
     var followers = follower?.toFixed(3).split(".");
@@ -68,15 +70,32 @@ export const Artist = () => {
           </Box>
           <Stack p="4" space={3} maxHeight="40%" bg="gray.600">
             <Stack space={2}>
-              <ThemedText type="title">{context?.artist?.name}</ThemedText>
-              <ThemedText type="subtitle">
+              <ThemedText
+                type="title"
+                style={{
+                  color: colorScheme === "dark" ? "white" : "black",
+                }}
+              >
+                {context?.artist?.name}
+              </ThemedText>
+              <ThemedText
+                type="subtitle"
+                style={{
+                  color: colorScheme === "dark" ? "white" : "black",
+                }}
+              >
                 {"Seguidores: " +
                   formatingFollowers(context?.artist?.followers?.total) ??
                   0 + " seguidores"}
               </ThemedText>
             </Stack>
 
-            <Text fontWeight="200" color="white">
+            <Text
+              fontWeight="200"
+              style={{
+                color: colorScheme === "dark" ? "white" : "black",
+              }}
+            >
               Bengaluru (also called Bangalore) is the center of India's
               high-tech industry. The city is also known for its parks and
               nightlife.

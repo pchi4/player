@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { View, useColorScheme } from "react-native";
 import {
   Box,
   Image,
@@ -17,6 +17,7 @@ export const CardNewsReleases = ({
   width,
   height,
 }: PropsCardNewsReleases) => {
+  const colorScheme = useColorScheme();
   return (
     <Box paddingRight="4">
       <Pressable onPress={handleClick}>
@@ -26,24 +27,29 @@ export const CardNewsReleases = ({
             resizeMode="cover"
             width={width}
             height={height}
-            rounded="6"
+            style={{ borderTopLeftRadius: 10, borderTopRightRadius: 10 }}
             source={{
               uri: items?.images[0]?.url,
             }}
           />
         </Box>
-        <Box>
+        <View
+          style={{
+            height: 80,
+            backgroundColor: colorScheme === "dark" ? "#212224" : "#ffffff",
+            borderBottomLeftRadius: 10,
+            borderBottomRightRadius: 10,
+            padding: 4,
+          }}
+        >
           <ThemedText type="subtitle" style={{ width: 200 }} numberOfLines={1}>
             {items.name}
           </ThemedText>
 
           <ThemedText type="default" style={{ width: 200 }} numberOfLines={1}>
-            {items.type[0].toUpperCase() +
-              items.type.slice(1) +
-              " ° " +
-              items.artists[0].name}
+            {items.artists[0].name}
           </ThemedText>
-        </Box>
+        </View>
       </Pressable>
     </Box>
   );

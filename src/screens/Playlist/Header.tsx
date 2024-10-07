@@ -20,21 +20,13 @@ const { width } = Dimensions.get("screen");
 interface PropsHeader {
   uriImageAlbum: string;
   albumName: string;
-  uriImageArtist: string;
   nameArtist: string;
-  typeAlbum: string;
-  realeaseDate: string;
-  staterdAllTracks: () => Promise<VideoEncoderEventMap>;
 }
 
 export function Header({
   uriImageAlbum,
   albumName,
-  uriImageArtist,
   nameArtist,
-  typeAlbum,
-  realeaseDate,
-  staterdAllTracks,
 }: PropsHeader): React.JSX.Element {
   const playerState = usePlaybackState();
   const colorScheme = useColorScheme();
@@ -56,36 +48,23 @@ export function Header({
           style={{ top: "10%", left: 10 }}
           onPress={() => router.back()}
         >
-          <View
-            style={{
-              width: 50,
-              height: 50,
-              backgroundColor: "gray",
-              alignItems: "center",
-              alignContent: "center",
-              justifyContent: "center",
-              borderRadius: 1000,
-            }}
-          >
-            <Feather name={"arrow-left"} size={40 % 100} color="#FFFFFF" />
-          </View>
+          <Feather name={"arrow-left"} size={40 % 100} color="#FFFFFF" />
         </TouchableOpacity>
         <View
           style={{
             position: "absolute",
             top: width / 1.1,
             left: width / 1.3,
-            backgroundColor: "gray",
+            backgroundColor: "blue",
             borderRadius: 50,
             padding: 10,
             justifyContent: "center",
             alignContent: "center",
             alignItems: "center",
-            alignSelf: "center",
           }}
         >
           {playerState.state == "paused" ? (
-            <TouchableOpacity onPress={staterdAllTracks}>
+            <TouchableOpacity>
               <Feather
                 name={"play"}
                 size={50 % 100}
@@ -112,10 +91,10 @@ export function Header({
       </ThemedText>
       <ThemedText
         type="subtitle"
-        style={{ paddingHorizontal: 8, paddingBottom: 14 }}
+        style={{ paddingHorizontal: 8, paddingVertical: 18 }}
         numberOfLines={1}
       >
-        {nameArtist}
+        Created by {nameArtist}
       </ThemedText>
     </SafeAreaView>
   );

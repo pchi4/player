@@ -1,5 +1,10 @@
 import React from "react";
-import { View, Dimensions, TouchableOpacity } from "react-native";
+import {
+  View,
+  Dimensions,
+  TouchableOpacity,
+  useColorScheme,
+} from "react-native";
 import {
   Box,
   Image,
@@ -17,6 +22,7 @@ export const CardPlaylist = ({
   Width,
   Height,
 }: PropsCardPlaylist) => {
+  const colorScheme = useColorScheme();
   return (
     <Box
       paddingBottom="4"
@@ -32,24 +38,29 @@ export const CardPlaylist = ({
             resizeMode="cover"
             width={Width}
             height={Height}
-            rounded="6"
+            style={{ borderTopLeftRadius: 10, borderTopRightRadius: 10 }}
             source={{
               uri: items?.images[0]?.url,
             }}
           />
         </Box>
-        <Box>
+        <View
+          style={{
+            height: 80,
+            backgroundColor: colorScheme === "dark" ? "#212224" : "#ffffff",
+            borderBottomLeftRadius: 10,
+            borderBottomRightRadius: 10,
+            padding: 4,
+          }}
+        >
           <ThemedText type="subtitle" style={{ width: 200 }} numberOfLines={1}>
             {items.name}
           </ThemedText>
 
           <ThemedText type="default" style={{ width: 200 }} numberOfLines={1}>
-            {items.type[0].toUpperCase() +
-              items.type.slice(1) +
-              " ° " +
-              items?.owner?.display_name}
+            {items?.owner?.display_name}
           </ThemedText>
-        </Box>
+        </View>
       </TouchableOpacity>
     </Box>
   );

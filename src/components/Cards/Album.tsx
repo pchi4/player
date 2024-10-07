@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { View, useColorScheme } from "react-native";
 import {
   Box,
   Image,
@@ -11,6 +11,7 @@ import { ThemedText } from "@/src/components/ThemedText";
 import { PropsCardAlbum } from "../../types/Album/propsCardAlbum";
 import { useStateValue } from "@/src/context/State";
 import { router } from "expo-router";
+import { colorScheme } from "@gluestack-ui/themed-native-base/build/utils/NBsupport";
 
 export const CardAlbum = ({
   items,
@@ -19,6 +20,7 @@ export const CardAlbum = ({
   height,
 }: PropsCardAlbum) => {
   const [context, dispatch] = useStateValue().reducer;
+  const colorScheme = useColorScheme();
 
   return (
     <Box paddingRight="4" justifyContent="center" alignItems="center">
@@ -39,24 +41,27 @@ export const CardAlbum = ({
             resizeMode="cover"
             width={width}
             height={height}
-            rounded="10"
+            style={{ borderTopLeftRadius: 10, borderTopRightRadius: 10 }}
             source={{
               uri: items?.album?.images[0].url,
             }}
           />
         </Box>
-        <Box>
+        <View
+          style={{
+            height: 80,
+            backgroundColor: colorScheme === "dark" ? "#212224" : "#ffffff",
+            borderBottomLeftRadius: 10,
+            borderBottomRightRadius: 10,
+            padding: 4,
+          }}
+        >
           <ThemedText type="subtitle" style={{ width: 200 }} numberOfLines={1}>
             {items.album?.name}
           </ThemedText>
 
-          <ThemedText type="default">
-            {items.album?.type[0].toUpperCase() +
-              items.album?.type.slice(1) +
-              " ° " +
-              items.album?.artists[0].name}
-          </ThemedText>
-        </Box>
+          <ThemedText type="default">{items.album?.artists[0].name}</ThemedText>
+        </View>
       </Pressable>
     </Box>
   );
