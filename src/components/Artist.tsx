@@ -16,7 +16,8 @@ export const Artist = () => {
   const [context, dispatch] = useStateValue().reducer;
   const colorScheme = useColorScheme();
 
-  const formatingFollowers = (follower: any) => {
+  const formatingFollowers = (follower: any): string | undefined => {
+    if (!follower) return;
     var followers = follower?.toFixed(3).split(".");
     followers[0] = followers[0]?.split(/(?=(?:...)*$)/).join(".");
     return followers.join(",");

@@ -56,7 +56,7 @@ export default function Controller() {
             position="absolute"
             style={{
               position: "absolute",
-              backgroundColor: colorScheme === "dark" ? "#5C5E60" : "#ffffff",
+              backgroundColor: colorScheme === "dark" ? "#6495ED" : "#566D7E",
             }}
           >
             <HStack justifyContent="space-between">
@@ -82,7 +82,6 @@ export default function Controller() {
                       style={{
                         maxWidth: 200,
                         marginLeft: 10,
-                        color: "white",
                         fontSize: scale(14),
                       }}
                       numberOfLines={1}
@@ -95,7 +94,6 @@ export default function Controller() {
                       style={{
                         maxWidth: 200,
                         marginLeft: 10,
-                        color: "white",
                         fontSize: scale(10),
                       }}
                       numberOfLines={1}
@@ -109,11 +107,19 @@ export default function Controller() {
                 <HStack space={2}>
                   {status.state === "playing" ? (
                     <TouchableOpacity onPress={() => TrackPlayer.pause()}>
-                      <Feather name="pause" size={scale(25)} color="#FFFFFF" />
+                      <Feather
+                        name="pause"
+                        size={scale(25)}
+                        color={colorScheme === "dark" ? "white" : "black"}
+                      />
                     </TouchableOpacity>
                   ) : (
                     <TouchableOpacity onPress={() => TrackPlayer.play()}>
-                      <Feather name="play" size={scale(25)} color="#FFFFFF" />
+                      <Feather
+                        name="play"
+                        size={scale(25)}
+                        color={colorScheme === "dark" ? "white" : "black"}
+                      />
                     </TouchableOpacity>
                   )}
                 </HStack>

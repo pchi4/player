@@ -52,8 +52,6 @@ export default function Album() {
 
   const activeTrack = useActiveTrack();
 
-  console.log(freq);
-
   const {
     data: artists,
     isFetching,
@@ -212,7 +210,7 @@ export default function Album() {
                     backgroundColor:
                       activeTrack?.index === index &&
                       album.name === activeTrack.album
-                        ? "#f0f8"
+                        ? "orange"
                         : colorScheme === "dark"
                         ? "#2b3c43"
                         : "#f1f1f1",
@@ -232,7 +230,7 @@ export default function Album() {
                           backgroundColor:
                             activeTrack?.index === index &&
                             album.name === activeTrack.album
-                              ? "pink"
+                              ? "gray"
                               : colorScheme === "dark"
                               ? "gray"
                               : "gray",

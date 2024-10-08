@@ -63,7 +63,7 @@ export function Header({
             position: "absolute",
             top: width / 1.1,
             left: width / 1.3,
-            backgroundColor: "gray",
+            backgroundColor: colorScheme === "dark" ? "orange" : "gray",
             borderRadius: 50,
             padding: 10,
             justifyContent: "center",
@@ -77,7 +77,7 @@ export function Header({
               <Feather
                 name={"play"}
                 size={50 % 100}
-                color={colorScheme === "dark" ? "white" : "black"}
+                color={colorScheme === "dark" ? "blue" : "#FFFFFF"}
               />
             </TouchableOpacity>
           ) : (
@@ -85,7 +85,7 @@ export function Header({
               <Feather
                 name={"pause"}
                 size={50 % 100}
-                color={colorScheme === "dark" ? "white" : "black"}
+                color={colorScheme === "dark" ? "blue" : "#FFFFFF"}
               />
             </TouchableOpacity>
           )}

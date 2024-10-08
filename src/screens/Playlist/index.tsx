@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   useColorScheme,
   RefreshControl,
+  Text,
 } from "react-native";
 
 import { HStack, Image } from "@gluestack-ui/themed-native-base";
@@ -19,7 +20,7 @@ import Controller from "../Controller";
 import { ThemedText } from "@/src/components/ThemedText";
 import { Header } from "./Header";
 import { useGetColorsImage } from "@/src/hooks/useGetColorsImage";
-
+import { Card } from "./Card";
 const { width } = Dimensions.get("screen");
 
 export default function Playlist() {
@@ -87,7 +88,7 @@ export default function Playlist() {
               />
             }
             data={tracksPlaylist?.items}
-            keyExtractor={(item) => String(item.id)}
+            keyExtractor={(item, idx) => String(idx)}
             ListHeaderComponent={
               <Header
                 uriImageAlbum={context.playlist?.images[0].url}
@@ -96,60 +97,7 @@ export default function Playlist() {
               />
             }
             renderItem={({ item, index }) => {
-              return (
-                <View>
-                  <TouchableOpacity
-                  // onPress={() =>
-                  //   navigation.navigate("home", {
-                  //     screen: "playMusic",
-                  //     params: {
-                  //       item,
-                  //       album: {
-                  //         tracks: {
-                  //           index,
-                  //           items: tracksPlaylist.items.map((value) => {
-                  //             return formatedParams(value);
-                  //           }),
-                  //         },
-                  //       },
-                  //     },
-                  //   })
-                  // }
-                  >
-                    <HStack
-                      space={[2, 3]}
-                      justifyContent="start"
-                      style={{ paddingBottom: 14, paddingHorizontal: 10 }}
-                    >
-                      <Image
-                        alt="art work"
-                        width={width / 7}
-                        height={width / 7}
-                        rounded="md"
-                        source={{
-                          uri: item.track.album.images[0].url,
-                        }}
-                      />
-
-                      <View
-                        style={{ alignContent: "center", alignSelf: "center" }}
-                      >
-                        <ThemedText
-                          type="subtitle"
-                          style={{ width: width / 1.3 }}
-                          numberOfLines={1}
-                        >
-                          {item.track.name}
-                        </ThemedText>
-                        <ThemedText type="default">
-                          {" "}
-                          {item.track.album.artists[0].name}
-                        </ThemedText>
-                      </View>
-                    </HStack>
-                  </TouchableOpacity>
-                </View>
-              );
+              return <Card music={item} />;
             }}
           />
           <Controller />
