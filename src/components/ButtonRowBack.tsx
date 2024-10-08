@@ -6,18 +6,12 @@ import { router } from "expo-router";
 export function ButtonRowBack() {
   const colorScheme = useColorScheme();
   return (
-    <TouchableOpacity
-      style={{ top: "10%", left: 10 }}
-      onPress={() => router.back()}
-    >
+    <TouchableOpacity style={{}} onPress={() => router.back()}>
       <View
         style={{
-          width: 50,
-          height: 50,
+          width: 40,
+          height: 40,
           backgroundColor: colorScheme === "dark" ? "orange" : "gray",
-          alignItems: "center",
-          alignContent: "center",
-          justifyContent: "center",
           borderRadius: 1000,
         }}
       >
