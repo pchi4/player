@@ -74,6 +74,8 @@ export const useGetToken = () => {
         }).toString(),
       });
 
+      console.log(result.data);
+
       if (result.data && result.data.access_token) {
         await AsyncStorage.setItem("token", result.data.access_token);
         await AsyncStorage.setItem("refreshToken", result.data.refresh_token);

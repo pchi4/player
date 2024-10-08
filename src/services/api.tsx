@@ -1,6 +1,6 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getRefreshToken } from "../utils/getRefreshToken";
+import { getRefreshToken } from "@/src/utils/getRefreshToken";
 
 const apiInstance = axios.create({
   headers: {
@@ -17,8 +17,6 @@ apiInstance.interceptors.response.use(
   },
   async function (error) {
     const originalRequest = error.config;
-
-    console.log({ error });
 
     if (error.response.status === 401) {
       originalRequest._retry = true;

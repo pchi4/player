@@ -16,6 +16,7 @@ import { ThemedText } from "@/src/components/ThemedText";
 import TrackPlayer, { usePlaybackState } from "react-native-track-player";
 import { Flex } from "@gluestack-ui/themed-native-base";
 const { width } = Dimensions.get("screen");
+import { ButtonRowBack } from "@/src/components/ButtonRowBack";
 
 interface PropsHeader {
   uriImageAlbum: string;
@@ -42,9 +43,13 @@ export function Header({
   return (
     <SafeAreaView>
       <ImageBackground
-        source={{
-          uri: uriImageAlbum,
-        }}
+        source={
+          uriImageAlbum
+            ? {
+                uri: uriImageAlbum,
+              }
+            : require("@/assets/images/unknown_track.png")
+        }
         alt="ArtWork albuns"
         style={{
           width: width,
@@ -52,24 +57,7 @@ export function Header({
           flex: 1,
         }}
       >
-        <TouchableOpacity
-          style={{ top: "10%", left: 10 }}
-          onPress={() => router.back()}
-        >
-          <View
-            style={{
-              width: 50,
-              height: 50,
-              backgroundColor: "gray",
-              alignItems: "center",
-              alignContent: "center",
-              justifyContent: "center",
-              borderRadius: 1000,
-            }}
-          >
-            <Feather name={"arrow-left"} size={40 % 100} color="#FFFFFF" />
-          </View>
-        </TouchableOpacity>
+        <ButtonRowBack />
         <View
           style={{
             position: "absolute",

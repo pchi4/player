@@ -13,7 +13,6 @@ const setupPlayer = async () => {
 
   await TrackPlayer.updateOptions({
     android: {
-      // This is the default behavior
       appKilledPlaybackBehavior: AppKilledPlaybackBehavior.ContinuePlayback,
     },
     ratingType: RatingType.Heart,

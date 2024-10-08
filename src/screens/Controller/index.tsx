@@ -120,7 +120,6 @@ export default function Controller() {
               </Box>
             </HStack>
             <Progress
-              mt={2}
               style={{ marginHorizontal: 0 }}
               mx={progress.duration / 1000}
               value={

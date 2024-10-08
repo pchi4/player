@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   FlatList,
-  StatusBar,
-  ScrollView,
   View,
   Dimensions,
   TouchableOpacity,
@@ -11,35 +9,18 @@ import {
   RefreshControl,
 } from "react-native";
 
-import {
-  HStack,
-  Box,
-  Divider,
-  Center,
-  Image,
-  Text,
-  VStack,
-  Icon,
-  Button,
-  Spinner,
-  Pressable,
-  Heading,
-  Avatar,
-  Flex,
-  Spacer,
-} from "@gluestack-ui/themed-native-base";
+import { HStack, Image } from "@gluestack-ui/themed-native-base";
 
 import { useGetTracksPlaylist, useGetProfile } from "./hooks";
 import { Loading } from "@/src/components/Loading";
 import { LinearGradient } from "expo-linear-gradient";
-import { Feather } from "@expo/vector-icons";
 import { useStateValue } from "@/src/context/State";
 import Controller from "../Controller";
 import { ThemedText } from "@/src/components/ThemedText";
 import { Header } from "./Header";
 import { useGetColorsImage } from "@/src/hooks/useGetColorsImage";
 
-const { width, height } = Dimensions.get("screen");
+const { width } = Dimensions.get("screen");
 
 export default function Playlist() {
   const [context, dispatch] = useStateValue().reducer;
@@ -47,15 +28,6 @@ export default function Playlist() {
   const playlistId = context.playlist.id;
   const colorScheme = useColorScheme();
   const [refreshing, setRefreshing] = useState(false);
-
-  const verifyLimitMax100 = (value: number): number => {
-    if (value >= 100) {
-      return 100;
-    }
-    return value;
-  };
-
-  console.log(context.playlist);
 
   const {
     data: tracksPlaylist,
@@ -116,7 +88,6 @@ export default function Playlist() {
             }
             data={tracksPlaylist?.items}
             keyExtractor={(item) => String(item.id)}
-            // stickyHeaderIndices={[0]}
             ListHeaderComponent={
               <Header
                 uriImageAlbum={context.playlist?.images[0].url}
@@ -126,57 +97,58 @@ export default function Playlist() {
             }
             renderItem={({ item, index }) => {
               return (
-                <TouchableOpacity
-
-                // onPress={() =>
-                //   navigation.navigate("home", {
-                //     screen: "playMusic",
-                //     params: {
-                //       item,
-                //       album: {
-                //         tracks: {
-                //           index,
-                //           items: tracksPlaylist.items.map((value) => {
-                //             return formatedParams(value);
-                //           }),
-                //         },
-                //       },
-                //     },
-                //   })
-                // }
-                >
-                  <HStack
-                    space={[2, 3]}
-                    justifyContent="start"
-                    style={{ paddingBottom: 14, paddingHorizontal: 10 }}
+                <View>
+                  <TouchableOpacity
+                  // onPress={() =>
+                  //   navigation.navigate("home", {
+                  //     screen: "playMusic",
+                  //     params: {
+                  //       item,
+                  //       album: {
+                  //         tracks: {
+                  //           index,
+                  //           items: tracksPlaylist.items.map((value) => {
+                  //             return formatedParams(value);
+                  //           }),
+                  //         },
+                  //       },
+                  //     },
+                  //   })
+                  // }
                   >
-                    <Image
-                      alt="art work"
-                      width={width / 7}
-                      height={width / 7}
-                      rounded="md"
-                      source={{
-                        uri: item.track.album.images[0].url,
-                      }}
-                    />
-
-                    <View
-                      style={{ alignContent: "center", alignSelf: "center" }}
+                    <HStack
+                      space={[2, 3]}
+                      justifyContent="start"
+                      style={{ paddingBottom: 14, paddingHorizontal: 10 }}
                     >
-                      <ThemedText
-                        type="subtitle"
-                        style={{ width: width / 1.3 }}
-                        numberOfLines={1}
+                      <Image
+                        alt="art work"
+                        width={width / 7}
+                        height={width / 7}
+                        rounded="md"
+                        source={{
+                          uri: item.track.album.images[0].url,
+                        }}
+                      />
+
+                      <View
+                        style={{ alignContent: "center", alignSelf: "center" }}
                       >
-                        {item.track.name}
-                      </ThemedText>
-                      <ThemedText type="default">
-                        {" "}
-                        {item.track.album.artists[0].name}
-                      </ThemedText>
-                    </View>
-                  </HStack>
-                </TouchableOpacity>
+                        <ThemedText
+                          type="subtitle"
+                          style={{ width: width / 1.3 }}
+                          numberOfLines={1}
+                        >
+                          {item.track.name}
+                        </ThemedText>
+                        <ThemedText type="default">
+                          {" "}
+                          {item.track.album.artists[0].name}
+                        </ThemedText>
+                      </View>
+                    </HStack>
+                  </TouchableOpacity>
+                </View>
               );
             }}
           />

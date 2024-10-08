@@ -5,8 +5,6 @@ export const getRefreshToken = async () => {
   try {
     const refreshToken = await AsyncStorage.getItem("refreshToken");
 
-    console.log({ refreshToken });
-
     const response = await axios("https://accounts.spotify.com/api/token", {
       method: "POST",
       headers: {
@@ -19,8 +17,6 @@ export const getRefreshToken = async () => {
         client_secret: process.env.EXPO_PUBLIC_API_URL,
       }).toString(),
     });
-
-    console.log({ response });
 
     return ({ access_token } = response.data);
   } catch (error) {

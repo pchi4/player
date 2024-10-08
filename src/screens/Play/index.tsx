@@ -38,6 +38,8 @@ import Buffering from "@/src/components/Buffering";
 import ParallaxScrollView from "@/src/components/ParallaxScrollView";
 import { ThemedText } from "@/src/components/ThemedText";
 
+import { Header } from "@/src/screens/Play/Header";
+
 const { width, height } = Dimensions.get("screen");
 
 export default function Play() {
@@ -92,36 +94,7 @@ export default function Play() {
       headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
       heigth={height / 2}
       style={{ flex: 1 }}
-      headerImage={
-        <SafeAreaView>
-          <ImageBackground
-            source={{
-              uri: track?.artwork,
-            }}
-            alt="ArtWork albuns"
-            style={{ width: width, height: width }}
-          >
-            <TouchableOpacity
-              style={{ top: "10%", paddingHorizontal: 10 }}
-              onPress={() => router.back()}
-            >
-              <View
-                style={{
-                  width: 50,
-                  height: 50,
-                  backgroundColor: "gray",
-                  alignItems: "center",
-                  alignContent: "center",
-                  justifyContent: "center",
-                  borderRadius: 1000,
-                }}
-              >
-                <Feather name={"arrow-left"} size={40 % 100} color="#FFFFFF" />
-              </View>
-            </TouchableOpacity>
-          </ImageBackground>
-        </SafeAreaView>
-      }
+      headerImage={<Header />}
     >
       <LinearGradient
         colors={
