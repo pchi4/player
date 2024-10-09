@@ -1,31 +1,18 @@
+import { Text, Box, HStack } from "@gluestack-ui/themed-native-base";
 import {
-  Center,
-  Text,
-  Box,
-  HStack,
-  Flex,
-} from "@gluestack-ui/themed-native-base";
-import {
-  Pressable,
   Dimensions,
   TouchableOpacity,
-  ScrollView,
-  Image,
-  ImageBackground,
-  StatusBar,
   View,
   useColorScheme,
 } from "react-native";
 
-import { useStateValue } from "@/src/context/State";
 import { LinearGradient } from "expo-linear-gradient";
 import Slider from "@react-native-community/slider";
 import { useImageColors } from "@/src/hooks";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Loading } from "@/src/components/Loading";
 import { Feather } from "@expo/vector-icons";
-import { useGetDetailsArtist } from "./hooks";
-import { SafeAreaView } from "react-native-safe-area-context";
+
 import TrackPlayer, {
   useActiveTrack,
   useProgress,
@@ -34,7 +21,6 @@ import TrackPlayer, {
 } from "react-native-track-player";
 import { Artist } from "@/src/components/Artist";
 import { router } from "expo-router";
-import Buffering from "@/src/components/Buffering";
 import ParallaxScrollView from "@/src/components/ParallaxScrollView";
 import { ThemedText } from "@/src/components/ThemedText";
 
@@ -43,8 +29,6 @@ import { Header } from "@/src/screens/Play/Header";
 const { width, height } = Dimensions.get("screen");
 
 export default function Play() {
-  const [context, dispatch] = useStateValue().reducer;
-  const [isFavorite, setIsFavorite] = useState(false);
   const [isReapeat, setIsRepeat] = useState(false);
   const [isRandom, setIsRandom] = useState(false);
 
@@ -54,12 +38,6 @@ export default function Play() {
 
   const { colors, loading } = useImageColors();
   const colorScheme = useColorScheme();
-
-  const album = context?.album.album;
-
-  // useEffect(() => {
-  //   StatusBar.setBackgroundColor(colors?.colorThree?.value);
-  // }, [colors]);
 
   const formatSecondsToMinutes = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);

@@ -68,27 +68,27 @@ export default function Playlist() {
               }
             : require("@/assets/images/unknown_track.png")
         }
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor="blue"
-          />
-        }
-        contentContainerStyle={[colorScheme === "dark" ? "black" : "white"]}
+        // refreshControl={
+        //   <RefreshControl
+        //     refreshing={refreshing}
+        //     onRefresh={onRefresh}
+        //     tintColor="blue"
+        //   />
+        // }
+
         image={{ uri: profile.images[0].url }}
         titleStyle={{ color: colorScheme === "dark" ? "white" : "black" }}
         contentIconNumberStyle={{ display: "none" }}
         hasBorderRadius
-        enableSafeAreaTopInset
         parallaxHeight={width}
         subtitle={context.playlist.owner?.display_name}
+        showsHorizontalScrollIndicator
         leftTopIcon={() => {
           return <ButtonRowBack />;
         }}
       >
         <View style={{ width: width, paddingTop: 10 }}>
-          <ThemedText type="title" numberOfLines={1} style={styles.titleAlbum}>
+          <ThemedText type="title" numberOfLines={2} style={styles.titleAlbum}>
             {context.playlist.name}
           </ThemedText>
           {tracksPlaylist?.items.map((item, key) => (

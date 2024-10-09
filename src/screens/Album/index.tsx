@@ -141,18 +141,18 @@ export default function Album() {
         image={{ uri: artists?.images[0].url }}
         contentIconNumber={album?.total_tracks}
         enableSafeAreaTopInset
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor="blue"
-          />
-        }
+        // refreshControl={
+        //   <RefreshControl
+        //     refreshing={refreshing}
+        //     onRefresh={onRefresh}
+        //     tintColor="blue"
+        //   />
+        // }
       >
         <View style={{ paddingTop: 10, width }}>
           <ThemedText
             type="title"
-            numberOfLines={1}
+            numberOfLines={2}
             style={{ paddingVertical: 10, paddingHorizontal: 6 }}
           >
             {album.name}

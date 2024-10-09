@@ -37,26 +37,6 @@ export function Footer({
         </ThemedText>
       </Box>
 
-      <Box style={{ paddingVertical: 20 }}>
-        <HStack justifyContent="start" paddingY="4">
-          <Avatar
-            bg="green.500"
-            size="sm"
-            source={{
-              uri: uriImageArtist,
-            }}
-          ></Avatar>
-
-          <ThemedText
-            style={{ alignItems: "center", alignSelf: "center" }}
-            type="subtitle"
-            numberOfLines={1}
-          >
-            {nameArtist}
-          </ThemedText>
-        </HStack>
-      </Box>
-
       <Box style={{ paddingVertical: 4 }}>
         <ThemedText type="subtitle" numberOfLines={1}>
           Mais que talvez você goste
