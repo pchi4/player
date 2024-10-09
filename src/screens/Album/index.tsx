@@ -3,33 +3,26 @@ import {
   SafeAreaView,
   TouchableOpacity,
   View,
-  LogBox,
   RefreshControl,
-  StatusBar,
-  Text,
   useColorScheme,
   Dimensions,
 } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
 import { Box, HStack, VStack, Spacer } from "@gluestack-ui/themed-native-base";
 
 import { useGetArtist, useGetSeveralArtist } from "./hooks";
-import { LinearGradient } from "expo-linear-gradient";
 import { Loading } from "@/src/components/Loading";
 import { useStateValue } from "@/src/context/State";
 import TrackPlayer, {
   usePlaybackState,
   useActiveTrack,
-  usePlayWhenReady,
 } from "react-native-track-player";
 
 import Controller from "@/src/screens/Controller";
-import { Header } from "./Header";
 import { Footer } from "./Footer";
-import { useImageColors } from "@/src/hooks";
 import { useGetColorsImage } from "@/src/hooks/useGetColorsImage";
 import { ThemedText } from "@/src/components/ThemedText";
-import { scale, verticalScale, moderateScale } from "react-native-size-matters";
+import { DetailsHeaderScrollView } from "react-native-sticky-parallax-header";
+import { ButtonRowBack } from "@/src/components/ButtonRowBack";
 
 interface Track {
   _track_number: any;
@@ -49,7 +42,7 @@ export default function Album() {
   const { colors } = useGetColorsImage({ uri: album.images[0].url });
   const colorScheme = useColorScheme();
   const [freq, setFrequencies] = useState();
-
+  const { width } = Dimensions.get("screen");
   const activeTrack = useActiveTrack();
 
   const {
@@ -71,33 +64,6 @@ export default function Album() {
     const seconds = Math.floor((time % 60000) / 1000);
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
-
-  async function staterdAllTracks() {
-    if (playerState.state == "paused") {
-      await TrackPlayer.play();
-      return;
-    }
-
-    await TrackPlayer.reset();
-
-    const tracks = album.tracks.items.map((track: Track, idx: any) => {
-      return {
-        url: track.preview_url,
-        title: track.name,
-        artist: track.artists[0].name,
-        duartion: track.duration_ms,
-        album: album.name,
-        total: album.tracks.total,
-        artwork: album?.images[0].url,
-        number_track: track._track_number,
-        explicit: track.explicit,
-        index: idx,
-      };
-    });
-
-    await TrackPlayer.add(tracks);
-    await TrackPlayer.play();
-  }
 
   function dispatchDetailsArtist() {
     dispatch({
@@ -158,135 +124,126 @@ export default function Album() {
   }
 
   return (
-    <View
-      style={{
-        paddingTop: "15%",
-        height: 150,
-        flex: 1,
-        backgroundColor: colorScheme === "dark" ? "#212224" : "white",
-      }}
-    >
-      <LinearGradient
-        colors={
-          colorScheme === "dark"
-            ? [colors.colorThree.value, "#212224", "#212224"]
-            : [colors.colorThree.value, "white", "white"]
+    <>
+      <DetailsHeaderScrollView
+        leftTopIcon={() => {
+          return <ButtonRowBack />;
+        }}
+        contentContainerStyle={[colorScheme === "dark" ? "black" : "white"]}
+        titleStyle={{ color: colorScheme === "dark" ? "white" : "black" }}
+        backgroundImage={
+          album?.images[0].url
+            ? { uri: album?.images[0].url }
+            : require("@/assets/images/unknown_track.png")
+        }
+        parallaxHeight={width}
+        subtitle={album?.artists[0].name}
+        image={{ uri: artists?.images[0].url }}
+        contentIconNumber={album?.total_tracks}
+        enableSafeAreaTopInset
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="blue"
+          />
         }
       >
-        <SafeAreaView>
-          <FlatList
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-                tintColor="blue"
-              />
-            }
-            data={album.tracks.items}
-            keyExtractor={(item) => String(item.id)}
-            // stickyHeaderIndices={[0]}
-            ListHeaderComponent={
-              <Header
-                uriImageAlbum={album?.images[0].url}
-                albumName={album?.name}
-                uriImageArtist={artists?.images[0].url}
-                nameArtist={album?.artists[0].name}
-                typeAlbum={album?.type}
-                realeaseDate={album?.release_date}
-                staterdAllTracks={staterdAllTracks}
-              />
-            }
-            renderItem={({ item, index }) => {
-              return (
-                <Box
-                  _dark={{
-                    borderColor: "muted.50",
-                  }}
-                  borderColor="muted.800"
-                  py="2"
-                  style={{
-                    marginBottom: 8,
-                    paddingHorizontal: 8,
-                    backgroundColor:
-                      activeTrack?.index === index &&
-                      album.name === activeTrack.album
-                        ? "orange"
-                        : colorScheme === "dark"
-                        ? "#2b3c43"
-                        : "#f1f1f1",
-                    padding: 8,
-                    borderRadius: 8,
-                    marginHorizontal: 8,
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={() => handlePLayTrack(index, item)}
+        <View style={{ paddingTop: 10, width }}>
+          <ThemedText
+            type="title"
+            numberOfLines={1}
+            style={{ paddingVertical: 10, paddingHorizontal: 6 }}
+          >
+            {album.name}
+          </ThemedText>
+          {album.tracks.items.map((item, index) => (
+            <Box
+              key={index}
+              _dark={{
+                borderColor: "muted.50",
+              }}
+              borderColor="muted.800"
+              py="2"
+              style={{
+                marginBottom: 8,
+                paddingHorizontal: 8,
+                backgroundColor:
+                  activeTrack?.index === index &&
+                  album.name === activeTrack.album
+                    ? "orange"
+                    : colorScheme === "dark"
+                    ? "#2b3c43"
+                    : "white",
+                padding: 8,
+                borderRadius: 8,
+                marginHorizontal: 8,
+              }}
+            >
+              <TouchableOpacity onPress={() => handlePLayTrack(index, item)}>
+                <HStack space={[2, 3]} justifyContent="space-between">
+                  <View
+                    style={{
+                      width: 50,
+                      height: 50,
+                      backgroundColor:
+                        activeTrack?.index === index &&
+                        album.name === activeTrack.album
+                          ? "gray"
+                          : colorScheme === "dark"
+                          ? "gray"
+                          : "gray",
+                      alignItems: "center",
+                      alignContent: "center",
+                      justifyContent: "center",
+                      borderRadius: 1000,
+                    }}
                   >
-                    <HStack space={[2, 3]} justifyContent="space-between">
-                      <View
-                        style={{
-                          width: 50,
-                          height: 50,
-                          backgroundColor:
-                            activeTrack?.index === index &&
-                            album.name === activeTrack.album
-                              ? "gray"
-                              : colorScheme === "dark"
-                              ? "gray"
-                              : "gray",
-                          alignItems: "center",
-                          alignContent: "center",
-                          justifyContent: "center",
-                          borderRadius: 1000,
-                        }}
-                      >
-                        <ThemedText type="defaultSemiBold" numberOfLines={1}>
-                          {item.name[0]}
-                        </ThemedText>
-                      </View>
-                      <VStack>
-                        <ThemedText
-                          type="subtitle"
-                          numberOfLines={1}
-                          style={{ width: 230 }}
-                        >
-                          {item.name}
-                        </ThemedText>
-                        <ThemedText type="default" numberOfLines={1}>
-                          {album?.artists[0].name}
-                        </ThemedText>
-                      </VStack>
-                      <Spacer />
+                    <ThemedText type="defaultSemiBold" numberOfLines={1}>
+                      {item.name[0]}
+                    </ThemedText>
+                  </View>
+                  <VStack>
+                    <ThemedText
+                      type="subtitle"
+                      numberOfLines={1}
+                      style={{ width: 230 }}
+                    >
+                      {item.name}
+                    </ThemedText>
+                    <ThemedText type="default" numberOfLines={1}>
+                      {album?.artists[0].name}
+                    </ThemedText>
+                  </VStack>
+                  <Spacer />
 
-                      <ThemedText
-                        type="default"
-                        numberOfLines={1}
-                        style={{
-                          alignItems: "center",
-                          alignSelf: "flex-start",
-                        }}
-                      >
-                        {formatTime(item.duration_ms)}
-                      </ThemedText>
-                    </HStack>
-                  </TouchableOpacity>
-                </Box>
-              );
-            }}
-            ListFooterComponent={
-              <Footer
-                realeaseDate={album?.release_date}
-                totalTracks={album?.total_tracks}
-                uriImageArtist={artists.images[0].url}
-                nameArtist={album?.artists[0].name}
-                releaseArtist={releatedArtist?.artists}
-                copyrights={album?.copyrights}
-              />
-            }
+                  <ThemedText
+                    type="default"
+                    numberOfLines={1}
+                    style={{
+                      alignItems: "center",
+                      alignSelf: "flex-start",
+                    }}
+                  >
+                    {formatTime(item.duration_ms)}
+                  </ThemedText>
+                </HStack>
+              </TouchableOpacity>
+            </Box>
+          ))}
+          <Footer
+            realeaseDate={album?.release_date}
+            totalTracks={album?.total_tracks}
+            uriImageArtist={artists.images[0].url}
+            nameArtist={album?.artists[0].name}
+            releaseArtist={releatedArtist?.artists}
+            copyrights={album?.copyrights}
           />
-          <Controller />
-        </SafeAreaView>
-      </LinearGradient>
-    </View>
+        </View>
+      </DetailsHeaderScrollView>
+      <SafeAreaView>
+        <Controller />
+      </SafeAreaView>
+    </>
   );
 }

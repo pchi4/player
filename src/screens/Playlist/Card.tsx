@@ -13,6 +13,7 @@ import { HStack, Image } from "@gluestack-ui/themed-native-base";
 import TrackPlayer from "react-native-track-player";
 import { useGetArtist } from "./hooks";
 import { useStateValue } from "@/src/context/State";
+import { styles } from "./Style";
 
 interface Iprops {
   music: object;
@@ -62,7 +63,7 @@ export function Card({ music }: Iprops) {
         <HStack
           space={[2, 3]}
           justifyContent="start"
-          style={{ paddingBottom: 14, paddingHorizontal: 10 }}
+          style={styles.cardContainer}
         >
           <Image
             alt="art work"
@@ -78,16 +79,15 @@ export function Card({ music }: Iprops) {
             }
           />
 
-          <View style={{ alignContent: "center", alignSelf: "center" }}>
+          <View style={styles.cardContent}>
             <ThemedText
               type="subtitle"
-              style={{ width: width / 1.3 }}
+              style={styles.cardTitle}
               numberOfLines={1}
             >
               {music.track.name}
             </ThemedText>
             <ThemedText type="default">
-              {" "}
               {music?.track.album.artists[0].name}
             </ThemedText>
           </View>
