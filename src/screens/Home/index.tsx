@@ -26,6 +26,7 @@ import { ThemedText } from "@/src/components/ThemedText";
 import Controller from "@/src/screens/Controller";
 import { Footer } from "./Footer";
 import { Header } from "@/src/components/Header";
+import { colorScheme } from "@gluestack-ui/themed-native-base/build/utils/NBsupport";
 
 export default function Home() {
   const [_, setNavigator] = useStateValue().navigator;
@@ -38,6 +39,8 @@ export default function Home() {
   }, []);
 
   const { data, isError, isLoading, isFetching } = useGetAlbums();
+
+  const colorScheme = useColorScheme();
   const {
     data: profile,
     isLoading: profileIsLoading,

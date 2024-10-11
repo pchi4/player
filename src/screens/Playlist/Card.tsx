@@ -71,7 +71,7 @@ export function Card({ music }: Iprops) {
             height={width / 7}
             rounded="md"
             source={
-              music?.track.album.images[0].url
+              music?.track?.album?.images[0].url
                 ? {
                     uri: music?.track.album.images[0].url,
                   }
