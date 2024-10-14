@@ -7,6 +7,7 @@ import {
   View,
   Image,
   useColorScheme,
+  SafeAreaView,
 } from "react-native";
 import { Box } from "@gluestack-ui/themed-native-base";
 import { useStateValue } from "@/src/context/State";
@@ -98,7 +99,7 @@ export default function Home() {
   }
 
   return (
-    <View style={{ paddingBottom: "25%" }}>
+    <>
       <Header imageProfile={profile?.images[0].url} />
 
       <FlatList
@@ -134,7 +135,9 @@ export default function Home() {
           />
         }
       />
-      <Controller />
-    </View>
+      <SafeAreaView>
+        <Controller />
+      </SafeAreaView>
+    </>
   );
 }

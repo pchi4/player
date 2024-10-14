@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList } from "react-native";
+import { FlatList, SafeAreaView } from "react-native";
 import { Box } from "@gluestack-ui/themed-native-base";
 
 import { CardLibrary } from "@/src/components/Cards/index";
@@ -9,6 +9,7 @@ import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useStateValue } from "@/src/context/State";
 import { Header } from "@/src/components/Header";
+import Controller from "@/src/screens/Controller";
 
 export default function Library(): React.JSX.Element {
   const [context, dispatch] = useStateValue().reducer;
@@ -62,6 +63,10 @@ export default function Library(): React.JSX.Element {
           />
         )}
       />
+
+      <SafeAreaView>
+        <Controller />
+      </SafeAreaView>
     </Box>
   );
 }
