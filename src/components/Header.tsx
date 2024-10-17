@@ -1,6 +1,13 @@
 import React from "react";
-import { StatusBar, View, useColorScheme, Image } from "react-native";
+import {
+  StatusBar,
+  View,
+  useColorScheme,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { ThemedText } from "@/src/components/ThemedText";
+import { router } from "expo-router";
 
 interface PropsHeader {
   imageProfile: string;
@@ -31,10 +38,13 @@ export function Header({ imageProfile }: PropsHeader): React.JSX.Element {
       <ThemedText type="subtitle" style={{ paddingVertical: 8 }}>
         {message}
       </ThemedText>
-      <Image
-        style={{ width: 40, height: 40, borderRadius: 50 }}
-        source={{ uri: imageProfile }}
-      />
+
+      <TouchableOpacity onPress={() => router.push("/profile/[details]")}>
+        <Image
+          style={{ width: 40, height: 40, borderRadius: 50 }}
+          source={{ uri: imageProfile }}
+        />
+      </TouchableOpacity>
     </View>
   );
 }

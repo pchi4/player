@@ -34,12 +34,12 @@ export function TrackList({ index, track, playTrack }: iProps) {
       style={{
         marginBottom: 8,
         paddingHorizontal: 8,
-        backgroundColor:
-          activeTrack?.index === index && album.name === activeTrack?.album
-            ? "orange"
-            : colorScheme === "dark"
-            ? "#2b3c43"
-            : "white",
+        // backgroundColor:
+        //   activeTrack?.index === index && album.name === activeTrack?.album
+        //     ? "orange"
+        //     : colorScheme === "dark"
+        //     ? "#2b3c43"
+        //     : "white",
         padding: 8,
         borderRadius: 8,
         marginHorizontal: 8,

@@ -10,7 +10,6 @@ export const styles = StyleSheet.create({
   headerButton: {
     width: 50,
     height: 50,
-    backgroundColor: "gray",
     alignItems: "center",
     alignContent: "center",
     justifyContent: "center",

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, SafeAreaView } from "react-native";
+import { FlatList, RefreshControl, SafeAreaView } from "react-native";
 import { Box } from "@gluestack-ui/themed-native-base";
-
 import { CardLibrary } from "@/src/components/Cards/index";
 import { useGetPlaytlist } from "./hooks/useGetPlaytlist";
 import { Loading } from "@/src/components/Loading";
@@ -13,8 +12,15 @@ import Controller from "@/src/screens/Controller";
 
 export default function Library(): React.JSX.Element {
   const [context, dispatch] = useStateValue().reducer;
-  const { data, isError, isLoading, isFetching } = useGetPlaytlist();
   const [profile, setProfile] = useState<object | undefined>();
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+
+  const {
+    data,
+    isLoading,
+    isFetching,
+    refetch: onRefetchingPlaylist,
+  } = useGetPlaytlist();
 
   async function getProfile() {
     try {
@@ -29,6 +35,14 @@ export default function Library(): React.JSX.Element {
     getProfile();
   }, []);
 
+  function onRefetch() {
+    onRefetchingPlaylist();
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  }
+
   if (isLoading || isFetching) {
     return <Loading />;
   }
@@ -37,6 +51,13 @@ export default function Library(): React.JSX.Element {
     <Box justifyContent="space-between">
       <FlatList
         data={data?.items}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefetch}
+            tintColor="blue"
+          />
+        }
         numColumns={3}
         ListHeaderComponent={<Header imageProfile={profile?.images[0].url} />}
         keyExtractor={(item, idx) => String(idx)}

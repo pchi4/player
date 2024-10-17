@@ -49,9 +49,13 @@ export const Artist = () => {
           <Box>
             <AspectRatio w="100%" ratio={16 / 12}>
               <Image
-                source={{
-                  uri: context?.artist?.images[0].url,
-                }}
+                source={
+                  context?.artist?.images[0].url
+                    ? {
+                        uri: context?.artist?.images[0].url,
+                      }
+                    : require("@/assets/images/unknown_track.png")
+                }
                 alt="image"
               />
             </AspectRatio>

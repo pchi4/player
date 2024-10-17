@@ -76,5 +76,7 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 16,
     overflow: "hidden",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
 });

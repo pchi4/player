@@ -24,12 +24,7 @@ export function Card({ music }: Iprops) {
   const idArtist = music?.track.album.artists[0].id;
   const [context, dispatch] = useStateValue().reducer;
 
-  const {
-    data: artists,
-    isFetching,
-    isLoading,
-    refetch: onRefetchArtist,
-  } = useGetArtist({ id: idArtist });
+  const { data: artists } = useGetArtist({ id: idArtist });
 
   async function playMusic() {
     try {
@@ -67,11 +62,11 @@ export function Card({ music }: Iprops) {
         >
           <Image
             alt="art work"
-            width={width / 7}
-            height={width / 7}
+            width={width / 9}
+            height={width / 9}
             rounded="md"
             source={
-              music?.track?.album?.images[0].url
+              music?.track?.album
                 ? {
                     uri: music?.track.album.images[0].url,
                   }
