@@ -16,6 +16,7 @@ export default function RootLayout() {
       <Stack.Screen name="play/[details]" options={{ headerShown: false }} />
       <Stack.Screen name="artist/[details]" options={{ headerShown: false }} />
       <Stack.Screen name="library/index" options={{ headerShown: false }} />
+      <Stack.Screen name="profile/[details]" options={{ headerShown: false }} />
       <Stack.Screen
         name="playlist/[details]"
         options={{ headerShown: false }}
