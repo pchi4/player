@@ -6,6 +6,8 @@ Descubra e ouça suas músicas favoritas com o nosso aplicativo de música, dese
 
 Este projeto tem por finalidade de ser um projeto para portifólio. Minha paixão por música é muito grande e por isso quis fazer esse desafio.
 
+O aplicativo foi projetado para ser leve e rápido, aproveitando as funcionalidades nativas do React Native para uma experiência fluida em dispositivos móveis. Este projeto não só aprimorou minhas habilidades em desenvolvimento mobile, mas também me proporcionou uma profunda compreensão da interação com APIs.
+
 ## Principais Funcionalidades:
  
 * Busca Inteligente: Encontre suas faixas, álbuns e artistas favoritos com uma barra de busca otimizada.
