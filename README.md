@@ -1,4 +1,4 @@
-# Project Player 
+# Project Hitsmusic
 
 ## Sobre o projeto
 
@@ -6,7 +6,7 @@ Este projeto tem por finalidade de ser um projeto para portifólio. Por afins de
 
 ## Funcionalidades e Usabilidades: 
 
-O projeto inclui desde a autenticação auth 2 do spotify até armazenamento offline. Nele inclui algumas funcionalidades como: controle de musicas tanto no app como em segundo plano, perfil dos artistas, perfil do usuário, visualização das playlists, visualização dos albuns, modo dark e modo ligth. Tentei explorar quase 100% da api do Spotify. 
+O projeto inclui desde a autenticação auth 2 do spotify até armazenamento offline. Nele inclui algumas funcionalidades como: controle de musicas tanto no app como em segundo plano, perfil dos artistas, perfil do usuário, visualização das playlists, visualização dos albuns, Theme mode. Tentei explorar quase 100% da api do Spotify. 
 
 
 <div style="display: flex; align-items: center;">
