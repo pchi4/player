@@ -24,6 +24,11 @@ Este projeto tem por finalidade de ser um projeto para portifólio. Minha paixã
 <img width="367" alt="Screenshot 2024-08-02 at 15 26 05" src="https://github.com/user-attachments/assets/6bb152fa-0303-4d12-9093-155d8a0371a3"> 
 </div>
 
+## Tecnologias
+
+- Raect Native
+
+
 ## Inicializando o Projeto
 
 ```
